@@ -149,6 +149,34 @@ def test_build_index_threads_max_seq_length_and_batch_size():
     print("test_build_index_threads_max_seq_length_and_batch_size OK")
 
 
+def test_rerank_threads_max_length_and_batch_size_and_reorders():
+    """Regression test for the real crash: --rerank hit an MPS out-of-memory
+    error the same way embed() hit a CPU one, same root cause (no length
+    cap on the CrossEncoder call). Checks both that the cap values reach
+    predict_fn (mocked -- this sandbox can't make the real HF call either)
+    and that rerank() actually reorders by the returned scores, not just
+    passes them through."""
+    seen_calls = []
+
+    def fake_predict_fn(pairs, model_name, max_length, batch_size):
+        seen_calls.append((max_length, batch_size))
+        # score = length of the doc side of the pair -- deliberately
+        # inverts the input order so a passthrough bug would be caught
+        return [float(len(p[1])) for p in pairs]
+
+    a = mmo.MemoryDoc(path="short.md", text="hi", text_hash="h1", embedding=[])
+    b = mmo.MemoryDoc(path="long.md", text="a much longer document body here",
+                      text_hash="h2", embedding=[])
+    candidates = [(a, 0.9), (b, 0.1)]  # a ranked first going in
+
+    reranked = mmo.rerank("query", candidates, "fake-model",
+                          max_length=777, batch_size=2, predict_fn=fake_predict_fn)
+
+    assert seen_calls == [(777, 2)]
+    assert [d.path for d, _ in reranked] == ["long.md", "short.md"]  # b now first
+    print("test_rerank_threads_max_length_and_batch_size_and_reorders OK")
+
+
 def test_hybrid_search_ranks_relevant_doc_first():
     docs = [
         mmo.MemoryDoc(path="a.md", text="token optimizer routing policy for model selection",
@@ -228,6 +256,7 @@ if __name__ == "__main__":
     test_leiden_no_edges_still_returns_result()
     test_cosine_known_values()
     test_build_index_threads_max_seq_length_and_batch_size()
+    test_rerank_threads_max_length_and_batch_size_and_reorders()
     test_hybrid_search_ranks_relevant_doc_first()
     test_find_duplicate_groups_merges_transitively()
     test_find_duplicate_groups_exact_hash_match_always_grouped()

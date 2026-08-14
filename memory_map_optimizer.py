@@ -368,11 +368,30 @@ def hybrid_search(query: str, docs: list[MemoryDoc], query_embedding: list[float
     return fused[:k]
 
 
-def rerank(query: str, candidates: list[tuple[MemoryDoc, float]], model_name: str) -> list[tuple[MemoryDoc, float]]:
+def _predict_rerank_scores(pairs: list[list[str]], model_name: str,
+                            max_length: int = DEFAULT_MAX_SEQ_LENGTH,
+                            batch_size: int = DEFAULT_EMBED_BATCH_SIZE) -> list[float]:
+    """Isolated so rerank()'s ordering logic is testable without a real
+    model download, same pattern as _embed_texts/build_index.
+
+    max_length/batch_size exist for the same reason as _embed_texts's: a
+    CrossEncoder concatenates [query, doc] and runs full attention over
+    that combined sequence, so an uncapped long doc blows up here too --
+    hit for real as an MPS (Apple GPU) out-of-memory crash rather than the
+    CPU one _embed_texts hit ("MPS backend out of memory... Tried to
+    allocate 237.33 MiB"), same root cause: no length cap.
+    """
     from sentence_transformers import CrossEncoder
-    ce = CrossEncoder(model_name)
+    ce = CrossEncoder(model_name, max_length=max_length)
+    return list(ce.predict(pairs, batch_size=batch_size))
+
+
+def rerank(query: str, candidates: list[tuple[MemoryDoc, float]], model_name: str,
+           max_length: int = DEFAULT_MAX_SEQ_LENGTH,
+           batch_size: int = DEFAULT_EMBED_BATCH_SIZE,
+           predict_fn=_predict_rerank_scores) -> list[tuple[MemoryDoc, float]]:
     pairs = [[query, d.text] for d, _ in candidates]
-    scores = ce.predict(pairs)
+    scores = predict_fn(pairs, model_name, max_length=max_length, batch_size=batch_size)
     reranked = sorted(zip([d for d, _ in candidates], scores), key=lambda x: -x[1])
     return reranked
 
@@ -388,7 +407,8 @@ def cmd_search(args: argparse.Namespace) -> int:
     results = hybrid_search(args.query, docs, query_vec, k=args.k)
 
     if args.rerank:
-        results = rerank(args.query, results, args.rerank_model)
+        results = rerank(args.query, results, args.rerank_model,
+                          max_length=args.max_seq_length, batch_size=args.batch_size)
 
     for doc, score in results:
         snippet = doc.text.strip().replace("\n", " ")[:140]
@@ -574,6 +594,10 @@ def main() -> int:
     p.add_argument("--k", type=int, default=8)
     p.add_argument("--rerank", action="store_true", help="second-stage cross-encoder rerank")
     p.add_argument("--rerank-model", default=DEFAULT_RERANK_MODEL)
+    p.add_argument("--max-seq-length", type=int, default=DEFAULT_MAX_SEQ_LENGTH,
+                    help="cap tokens per [query,doc] pair for --rerank -- bounds attention memory (default %(default)s)")
+    p.add_argument("--batch-size", type=int, default=DEFAULT_EMBED_BATCH_SIZE,
+                    help="pairs per rerank batch (default %(default)s)")
     p.set_defaults(func=cmd_search)
 
     p = sub.add_parser("dedup", help="find near-duplicate / mergeable memory files")
