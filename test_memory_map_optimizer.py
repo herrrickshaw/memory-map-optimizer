@@ -27,19 +27,42 @@ def test_load_graph_json_dict_shape():
             "nodes": [{"id": "a"}, {"id": "b"}, {"id": "c"}],
             "edges": [{"source": "a", "target": "b"}, {"source": "b", "target": "c"}],
         }))
-        nodes, edges = mmo._load_graph_json(p, "nodes", "edges", "source", "target", "id")
+        nodes, edges, dangling = mmo._load_graph_json(p, "nodes", "edges", "source", "target", "id")
         assert set(nodes) == {"a", "b", "c"}
         assert edges == [("a", "b"), ("b", "c")]
+        assert dangling == []
     print("test_load_graph_json_dict_shape OK")
+
+
+def test_load_graph_json_dangling_edge_endpoint():
+    """Regression test for the real graphify data: an edge referencing a
+    node id ('Bazartalks_Py2Cplus::json'-shaped) with no matching entry in
+    "nodes" -- must not KeyError building the igraph object, must surface
+    the endpoint as "dangling" instead of silently dropping the edge."""
+    with tempfile.TemporaryDirectory() as d:
+        p = Path(d) / "graph.json"
+        p.write_text(json.dumps({
+            "nodes": [{"id": "a"}, {"id": "b"}],
+            "edges": [{"source": "a", "target": "b"},
+                      {"source": "b", "target": "Bazartalks_Py2Cplus::json"}],
+        }))
+        nodes, edges, dangling = mmo._load_graph_json(p, "nodes", "edges", "source", "target", "id")
+        assert set(nodes) == {"a", "b", "Bazartalks_Py2Cplus::json"}
+        assert dangling == ["Bazartalks_Py2Cplus::json"]
+        # must not raise -- this is the exact KeyError hit on real data
+        result = mmo.run_leiden(nodes, edges, seed=0)
+        assert result.num_nodes == 3
+    print("test_load_graph_json_dangling_edge_endpoint OK")
 
 
 def test_load_graph_json_edge_list_shape():
     with tempfile.TemporaryDirectory() as d:
         p = Path(d) / "graph.json"
         p.write_text(json.dumps({"edges": [["x", "y"], ["y", "z"]]}))
-        nodes, edges = mmo._load_graph_json(p, "nodes", "edges", "source", "target", "id")
+        nodes, edges, dangling = mmo._load_graph_json(p, "nodes", "edges", "source", "target", "id")
         assert set(nodes) == {"x", "y", "z"}
         assert edges == [("x", "y"), ("y", "z")]
+        assert dangling == ["x", "y", "z"]  # no "nodes" key at all -- every endpoint is "dangling"
     print("test_load_graph_json_edge_list_shape OK")
 
 
@@ -177,6 +200,7 @@ def test_report_runs_without_index_or_clusters():
 
 if __name__ == "__main__":
     test_load_graph_json_dict_shape()
+    test_load_graph_json_dangling_edge_endpoint()
     test_load_graph_json_edge_list_shape()
     test_leiden_finds_real_communities()
     test_leiden_no_edges_still_returns_result()

@@ -75,12 +75,25 @@ DEFAULT_CLUSTERS_PATH = ".memopt/clusters.json"
 # ══════════════════════════════════════════════════════════════════════════
 
 def _load_graph_json(path: Path, nodes_key: str, edges_key: str,
-                      source_key: str, target_key: str, id_key: str) -> tuple[list[str], list[tuple[str, str]]]:
+                      source_key: str, target_key: str, id_key: str
+                      ) -> tuple[list[str], list[tuple[str, str]], list[str]]:
     """
     Tolerant loader for graphify-style graph JSON. Two shapes handled:
       {"nodes": [{"id": "..."}], "edges": [{"source": "...", "target": "..."}]}
       {"edges": [["a", "b"], ...]}                          (nodes implied)
     Override key names via CLI flags if your graph JSON differs.
+
+    Real graphify data (2026-08) has edges referencing node ids that never
+    appear in the declared "nodes" list -- e.g. an edge endpoint like
+    "Bazartalks_Py2Cplus::json" with no matching node entry, presumably a
+    file/dependency that got pruned from the node list without its edges
+    being pruned too. Rather than crash building the igraph object (a bare
+    KeyError with no indication of WHY), any such dangling endpoint is
+    added to the node set automatically -- Leiden treats it like any other
+    node, just one with no declared metadata. Returns the third element as
+    the list of endpoints that had to be added this way, so callers can
+    report how much of the graph's declared structure doesn't match its
+    actual edges.
     """
     data = json.loads(path.read_text())
 
@@ -98,13 +111,18 @@ def _load_graph_json(path: Path, nodes_key: str, edges_key: str,
     if raw_nodes is not None:
         nodes = [str(n[id_key]) if isinstance(n, dict) else str(n) for n in raw_nodes]
     else:
-        seen: dict[str, None] = {}
-        for a, b in edges:
-            seen.setdefault(a, None)
-            seen.setdefault(b, None)
-        nodes = list(seen)
+        nodes = []
 
-    return nodes, edges
+    declared = set(nodes)
+    dangling: list[str] = []
+    for a, b in edges:
+        for endpoint in (a, b):
+            if endpoint not in declared:
+                declared.add(endpoint)
+                nodes.append(endpoint)
+                dangling.append(endpoint)
+
+    return nodes, edges, dangling
 
 
 @dataclass
@@ -170,12 +188,15 @@ def cmd_cluster(args: argparse.Namespace) -> int:
         print(f"error: graph file not found: {graph_path}", file=sys.stderr)
         return 1
 
-    nodes, edges = _load_graph_json(
+    nodes, edges, dangling = _load_graph_json(
         graph_path, args.nodes_key, args.edges_key, args.source_key, args.target_key, args.id_key,
     )
     if not nodes:
         print("error: no nodes found -- check --nodes-key/--edges-key against your graph JSON", file=sys.stderr)
         return 1
+    if dangling:
+        print(f"note: {len(dangling)} edge endpoint(s) had no matching node entry "
+              f"(e.g. {dangling[0]!r}) -- added them as nodes so clustering doesn't crash on them")
 
     result = run_leiden(nodes, edges, resolution=args.resolution, seed=args.seed)
 
