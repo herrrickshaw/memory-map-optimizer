@@ -32,34 +32,41 @@ use, so it's a drop-in augmentation.
 
 ## Install
 
+macOS's Homebrew Python refuses global `pip install` (PEP 668,
+`externally-managed-environment`) — use a venv, which also sidesteps the
+`python`/`pip` vs `python3`/`pip3` aliasing difference entirely since an
+activated venv provides both:
+
 ```bash
-pip3 install -r requirements.txt
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
-macOS ships `python3`/`pip3` only — plain `python`/`pip` aren't aliased by
-default (that's `zsh: command not found: pip` / `python`). Use `pip3` /
-`python3` below, or `python -m pip install ...` / alias them yourself if
-you'd rather not type the `3` every time.
+(`deactivate` to leave the venv later; re-run the `source` line in new
+shells to get back in.)
 
 ## Usage
 
+With the venv active (see above):
+
 ```bash
 # 1. Fix graphify's broken community detection
-python3 memory_map_optimizer.py cluster \
+python memory_map_optimizer.py cluster \
   --graph ~/.graphify/global-graph.json --write-back
 
 # 2. Re-index your memory files with a modern embedding model
-python3 memory_map_optimizer.py embed \
+python memory_map_optimizer.py embed \
   --memory-dir "~/.claude/projects/*/memory/**"
 
 # 3. Search
-python3 memory_map_optimizer.py search "token optimizer routing" --rerank
+python memory_map_optimizer.py search "token optimizer routing" --rerank
 
 # 4. Find merge candidates
-python3 memory_map_optimizer.py dedup --threshold 0.92
+python memory_map_optimizer.py dedup --threshold 0.92
 
 # 5. Regenerate the memory-map report with live numbers
-python3 memory_map_optimizer.py report --out memory_map_v2.html
+python memory_map_optimizer.py report --out memory_map_v2.html
 ```
 
 If your `~/.graphify/global-graph.json` uses different key names than

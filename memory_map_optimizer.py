@@ -42,15 +42,16 @@ sentence-transformers usage and hasn't been run against a live download in
 this environment. Point --graph / --memory-dir at your real paths and run
 `embed` first before trusting `search`/`dedup` output.
 
-Install:
-  pip3 install -r requirements.txt
+Install (macOS Homebrew Python blocks global pip -- use a venv):
+  python3 -m venv .venv && source .venv/bin/activate
+  pip install -r requirements.txt
 
-Usage:
-  python3 memory_map_optimizer.py cluster --graph ~/.graphify/global-graph.json
-  python3 memory_map_optimizer.py embed --memory-dir "~/.claude/projects/*/memory"
-  python3 memory_map_optimizer.py search "token optimizer routing" --index .memopt/index.json
-  python3 memory_map_optimizer.py dedup --index .memopt/index.json --threshold 0.92
-  python3 memory_map_optimizer.py report --index .memopt/index.json --clusters .memopt/clusters.json --out memory_map_v2.html
+Usage (with the venv active):
+  python memory_map_optimizer.py cluster --graph ~/.graphify/global-graph.json
+  python memory_map_optimizer.py embed --memory-dir "~/.claude/projects/*/memory"
+  python memory_map_optimizer.py search "token optimizer routing" --index .memopt/index.json
+  python memory_map_optimizer.py dedup --index .memopt/index.json --threshold 0.92
+  python memory_map_optimizer.py report --index .memopt/index.json --clusters .memopt/clusters.json --out memory_map_v2.html
 """
 from __future__ import annotations
 
@@ -138,7 +139,7 @@ def run_leiden(nodes: list[str], edges: list[tuple[str, str]],
         import leidenalg
     except ImportError as e:
         raise RuntimeError(
-            "cluster needs python-igraph + leidenalg: pip3 install -r requirements.txt"
+            "cluster needs python-igraph + leidenalg -- see README Install (use a venv on macOS)"
         ) from e
 
     index = {n: i for i, n in enumerate(nodes)}
@@ -306,7 +307,7 @@ def hybrid_search(query: str, docs: list[MemoryDoc], query_embedding: list[float
     try:
         from rank_bm25 import BM25Okapi
     except ImportError as e:
-        raise RuntimeError("search needs rank-bm25: pip3 install -r requirements.txt") from e
+        raise RuntimeError("search needs rank-bm25 -- see README Install (use a venv on macOS)") from e
 
     corpus = [_tokenize(d.text) for d in docs]
     bm25 = BM25Okapi(corpus)
