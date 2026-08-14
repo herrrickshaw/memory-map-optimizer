@@ -127,6 +127,28 @@ def test_cosine_known_values():
     print("test_cosine_known_values OK")
 
 
+def test_build_index_threads_max_seq_length_and_batch_size():
+    """Regression test for the real crash: an unbounded-length memory file
+    made Qwen3-Embedding-0.6B's attention mask try to allocate 17.23 GiB.
+    The fix caps max_seq_length/batch_size in _embed_texts -- this checks
+    build_index actually passes non-default values through to embed_fn
+    rather than silently dropping them (a mocked embed_fn stands in for
+    the real HF call, which this sandbox can't make)."""
+    seen_calls = []
+
+    def fake_embed_fn(texts, model_name, max_seq_length, batch_size):
+        seen_calls.append((max_seq_length, batch_size))
+        return [[float(len(t))] for t in texts]
+
+    docs = [("a.md", "short"), ("b.md", "also short")]
+    indexed = mmo.build_index(docs, "fake-model", max_seq_length=999, batch_size=3,
+                              embed_fn=fake_embed_fn)
+    assert seen_calls == [(999, 3)]
+    assert len(indexed) == 2
+    assert indexed[0].embedding == [5.0]
+    print("test_build_index_threads_max_seq_length_and_batch_size OK")
+
+
 def test_hybrid_search_ranks_relevant_doc_first():
     docs = [
         mmo.MemoryDoc(path="a.md", text="token optimizer routing policy for model selection",
@@ -205,6 +227,7 @@ if __name__ == "__main__":
     test_leiden_finds_real_communities()
     test_leiden_no_edges_still_returns_result()
     test_cosine_known_values()
+    test_build_index_threads_max_seq_length_and_batch_size()
     test_hybrid_search_ranks_relevant_doc_first()
     test_find_duplicate_groups_merges_transitively()
     test_find_duplicate_groups_exact_hash_match_always_grouped()

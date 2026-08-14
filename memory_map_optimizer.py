@@ -250,21 +250,41 @@ def _read_memory_files(memory_dir_glob: str) -> list[tuple[str, str]]:
     return docs
 
 
-def _embed_texts(texts: list[str], model_name: str) -> list[list[float]]:
+DEFAULT_MAX_SEQ_LENGTH = 4096
+DEFAULT_EMBED_BATCH_SIZE = 8
+
+
+def _embed_texts(texts: list[str], model_name: str,
+                  max_seq_length: int = DEFAULT_MAX_SEQ_LENGTH,
+                  batch_size: int = DEFAULT_EMBED_BATCH_SIZE) -> list[list[float]]:
     """Isolated so the rest of the pipeline is testable without a real
-    model download (sentence-transformers pulls weights from HF)."""
+    model download (sentence-transformers pulls weights from HF).
+
+    max_seq_length and batch_size both bound worst-case memory, not just
+    speed -- hit for real on a live memory directory: one unusually long
+    memory file, uncapped, made Qwen3-Embedding-0.6B's attention-mask
+    construction try to allocate 17.23 GiB and crash the whole `embed` run
+    over a single outlier document. A batch pads every doc in it to the
+    longest one, so keeping batch_size small bounds that blowup too,
+    independent of max_seq_length.
+    """
     from sentence_transformers import SentenceTransformer
     model = SentenceTransformer(model_name)
-    vectors = model.encode(texts, normalize_embeddings=True, show_progress_bar=len(texts) > 20)
+    if model.max_seq_length is None or model.max_seq_length > max_seq_length:
+        model.max_seq_length = max_seq_length
+    vectors = model.encode(texts, normalize_embeddings=True, batch_size=batch_size,
+                            show_progress_bar=len(texts) > 20)
     return [v.tolist() for v in vectors]
 
 
 def build_index(docs: list[tuple[str, str]], model_name: str,
+                 max_seq_length: int = DEFAULT_MAX_SEQ_LENGTH,
+                 batch_size: int = DEFAULT_EMBED_BATCH_SIZE,
                  embed_fn=_embed_texts) -> list[MemoryDoc]:
     if not docs:
         return []
     texts = [t for _, t in docs]
-    vectors = embed_fn(texts, model_name)
+    vectors = embed_fn(texts, model_name, max_seq_length=max_seq_length, batch_size=batch_size)
     return [
         MemoryDoc(path=p, text=t, text_hash=hashlib.sha256(t.encode()).hexdigest()[:16], embedding=v)
         for (p, t), v in zip(docs, vectors)
@@ -277,8 +297,9 @@ def cmd_embed(args: argparse.Namespace) -> int:
         print(f"error: no .md files found under {args.memory_dir}", file=sys.stderr)
         return 1
 
-    print(f"embedding {len(docs)} memory files with {args.model} ...")
-    indexed = build_index(docs, args.model)
+    print(f"embedding {len(docs)} memory files with {args.model} "
+          f"(max_seq_length={args.max_seq_length}, batch_size={args.batch_size}) ...")
+    indexed = build_index(docs, args.model, max_seq_length=args.max_seq_length, batch_size=args.batch_size)
 
     out_path = Path(args.index).expanduser()
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -540,6 +561,10 @@ def main() -> int:
     p.add_argument("--memory-dir", default="~/.claude/projects/*/memory/**")
     p.add_argument("--model", default=DEFAULT_EMBED_MODEL,
                     help=f"HF model id, e.g. {DEFAULT_EMBED_MODEL} or BAAI/bge-m3")
+    p.add_argument("--max-seq-length", type=int, default=DEFAULT_MAX_SEQ_LENGTH,
+                    help="cap tokens per doc -- bounds attention-mask memory on long files (default %(default)s)")
+    p.add_argument("--batch-size", type=int, default=DEFAULT_EMBED_BATCH_SIZE,
+                    help="docs per encode batch -- smaller bounds peak memory further (default %(default)s)")
     p.add_argument("--index", default=DEFAULT_INDEX_PATH)
     p.set_defaults(func=cmd_embed)
 
