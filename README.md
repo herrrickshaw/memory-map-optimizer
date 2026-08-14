@@ -63,7 +63,7 @@ python memory_map_optimizer.py embed \
 python memory_map_optimizer.py search "token optimizer routing" --rerank
 
 # 4. Find merge candidates
-python memory_map_optimizer.py dedup --threshold 0.92
+python memory_map_optimizer.py dedup --threshold 0.85
 
 # 5. Regenerate the memory-map report with live numbers
 python memory_map_optimizer.py report --out memory_map_v2.html

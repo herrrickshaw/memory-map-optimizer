@@ -50,7 +50,7 @@ Usage (with the venv active):
   python memory_map_optimizer.py cluster --graph ~/.graphify/global-graph.json
   python memory_map_optimizer.py embed --memory-dir "~/.claude/projects/*/memory"
   python memory_map_optimizer.py search "token optimizer routing" --index .memopt/index.json
-  python memory_map_optimizer.py dedup --index .memopt/index.json --threshold 0.92
+  python memory_map_optimizer.py dedup --index .memopt/index.json --threshold 0.85
   python memory_map_optimizer.py report --index .memopt/index.json --clusters .memopt/clusters.json --out memory_map_v2.html
 """
 from __future__ import annotations
@@ -420,13 +420,21 @@ def cmd_search(args: argparse.Namespace) -> int:
 # dedup -- near-duplicate / mergeable memory file detection
 # ══════════════════════════════════════════════════════════════════════════
 
-def find_duplicate_groups(docs: list[MemoryDoc], threshold: float = 0.92) -> list[list[str]]:
+def find_duplicate_groups(docs: list[MemoryDoc], threshold: float = 0.85) -> list[list[str]]:
     """
     Groups files whose embeddings are mutually similar above *threshold*
     into merge candidates -- connected components over the similarity graph,
     so e.g. 4 sequential snapshots of the same topic surface as ONE group
     of 4, not 6 separate pairwise hits (matches the "4 -> 1" merge the
     original audit did by hand).
+
+    Default was 0.92 originally; lowered to 0.85 after a real run against
+    111 actual memory files found 0 groups at 0.92 -- too strict to be
+    useful as a default, even though some of those files are clearly
+    related (e.g. the audit's own "4 sequential token-optimizer snapshots"
+    case). 0.85 is still well above "vaguely similar topic" territory for
+    normalized embeddings; --threshold remains available to tune either
+    direction per directory.
     """
     n = len(docs)
     parent = list(range(n))
@@ -602,7 +610,9 @@ def main() -> int:
 
     p = sub.add_parser("dedup", help="find near-duplicate / mergeable memory files")
     p.add_argument("--index", default=DEFAULT_INDEX_PATH)
-    p.add_argument("--threshold", type=float, default=0.92)
+    p.add_argument("--threshold", type=float, default=0.85,
+                    help="min cosine similarity to group as duplicates (default %(default)s; "
+                         "lower finds more/looser matches, higher finds fewer/stricter ones)")
     p.add_argument("--out", default=".memopt/dedup.json")
     p.set_defaults(func=cmd_dedup)
 
