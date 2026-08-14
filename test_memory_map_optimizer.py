@@ -230,6 +230,45 @@ def test_find_duplicate_groups_exact_hash_match_always_grouped():
     print("test_find_duplicate_groups_exact_hash_match_always_grouped OK")
 
 
+def test_group_pairwise_similarities_flags_transitive_chain():
+    """Regression test for the real Piotroski false-positive: a group of 2
+    where find_duplicate_groups says "grouped" but the diff showed almost
+    no real overlap. This is the tool that would have caught it directly --
+    a 3-doc chain (A-B high, B-C high, A-C low) must report A-C's actual
+    (low) similarity, not hide it behind the group's binary membership."""
+    a = mmo.MemoryDoc(path="a.md", text="a", text_hash="ha", embedding=[1.0, 0.0, 0.0])
+    b = mmo.MemoryDoc(path="b.md", text="b", text_hash="hb", embedding=[0.9, 0.1, 0.0])  # close to a
+    c = mmo.MemoryDoc(path="c.md", text="c", text_hash="hc", embedding=[0.0, 0.1, 1.0])  # close to b, not a
+    by_path = {d.path: d for d in (a, b, c)}
+
+    pairs = mmo.group_pairwise_similarities(by_path, ["a.md", "b.md", "c.md"])
+    assert len(pairs) == 3
+    # descending order
+    assert pairs[0][2] >= pairs[1][2] >= pairs[2][2]
+    # a-c must be the weakest pair -- exactly the transitive-chain signal
+    weakest = min(pairs, key=lambda p: p[2])
+    assert {weakest[0], weakest[1]} == {"a.md", "c.md"}
+    print("test_group_pairwise_similarities_flags_transitive_chain OK")
+
+
+def test_parse_sweep_arg():
+    assert mmo._parse_sweep_arg("0.80:0.90:0.05") == [0.8, 0.85, 0.9]
+    assert mmo._parse_sweep_arg("0.9:0.9:0.05") == [0.9]  # single-point range
+
+    try:
+        mmo._parse_sweep_arg("not-a-spec")
+        assert False, "expected ValueError"
+    except ValueError:
+        pass
+
+    try:
+        mmo._parse_sweep_arg("0.8:0.9:0")
+        assert False, "expected ValueError for non-positive step"
+    except ValueError:
+        pass
+    print("test_parse_sweep_arg OK")
+
+
 def test_report_runs_without_index_or_clusters():
     """report must degrade gracefully when embed/cluster haven't run yet --
     this is the first thing a new user will hit."""
@@ -260,5 +299,7 @@ if __name__ == "__main__":
     test_hybrid_search_ranks_relevant_doc_first()
     test_find_duplicate_groups_merges_transitively()
     test_find_duplicate_groups_exact_hash_match_always_grouped()
+    test_group_pairwise_similarities_flags_transitive_chain()
+    test_parse_sweep_arg()
     test_report_runs_without_index_or_clusters()
     print("\nALL TESTS PASSED")

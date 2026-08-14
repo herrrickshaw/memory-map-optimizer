@@ -51,6 +51,7 @@ Usage (with the venv active):
   python memory_map_optimizer.py embed --memory-dir "~/.claude/projects/*/memory"
   python memory_map_optimizer.py search "token optimizer routing" --index .memopt/index.json
   python memory_map_optimizer.py dedup --index .memopt/index.json --threshold 0.85
+  python memory_map_optimizer.py dedup --sweep 0.80:0.95:0.05   # see pairwise sim, not just in/out
   python memory_map_optimizer.py report --index .memopt/index.json --clusters .memopt/clusters.json --out memory_map_v2.html
 """
 from __future__ import annotations
@@ -462,12 +463,87 @@ def find_duplicate_groups(docs: list[MemoryDoc], threshold: float = 0.85) -> lis
     return sorted([g for g in groups.values() if len(g) > 1], key=lambda g: -len(g))
 
 
+def group_pairwise_similarities(docs_by_path: dict[str, "MemoryDoc"],
+                                 group_paths: list[str]) -> list[tuple[str, str, float]]:
+    """
+    All pairwise cosine similarities among the docs in one merge-candidate
+    group, descending. A group with a low pair inside it is held together
+    only by a TRANSITIVE chain (A-B and B-C both cleared the threshold, so
+    the union-find in find_duplicate_groups puts A and C in one group even
+    if cosine(A, C) is much lower) -- that's the fragile, least trustworthy
+    kind of match, and this is the only way to see it: the group listing
+    alone just says "in" or "out", it doesn't say how.
+    """
+    pairs = []
+    for i in range(len(group_paths)):
+        for j in range(i + 1, len(group_paths)):
+            a, b = group_paths[i], group_paths[j]
+            sim = cosine(docs_by_path[a].embedding, docs_by_path[b].embedding)
+            pairs.append((a, b, sim))
+    return sorted(pairs, key=lambda x: -x[2])
+
+
+def _parse_sweep_arg(spec: str) -> list[float]:
+    """Parses "START:STOP:STEP" (e.g. "0.80:0.95:0.05") into a threshold
+    list, ascending, rounded to 4dp to avoid float-accumulation drift."""
+    try:
+        lo, hi, step = (float(x) for x in spec.split(":"))
+    except ValueError as e:
+        raise ValueError(f'--sweep must be START:STOP:STEP, e.g. "0.80:0.95:0.05" (got {spec!r})') from e
+    if step <= 0:
+        raise ValueError(f"--sweep STEP must be positive (got {step})")
+    thresholds = []
+    t = lo
+    while t <= hi + 1e-9:
+        thresholds.append(round(t, 4))
+        t += step
+    return thresholds
+
+
 def cmd_dedup(args: argparse.Namespace) -> int:
     index_path = Path(args.index).expanduser()
     if not index_path.exists():
         print(f"error: no index at {index_path} -- run `embed` first", file=sys.stderr)
         return 1
     _, docs = load_index(index_path)
+
+    if args.sweep:
+        try:
+            thresholds = _parse_sweep_arg(args.sweep)
+        except ValueError as e:
+            print(f"error: {e}", file=sys.stderr)
+            return 1
+
+        print(f"sweeping {len(thresholds)} threshold(s) [{thresholds[0]:.3f}..{thresholds[-1]:.3f}]:\n")
+        by_path = {d.path: d for d in docs}
+        sweep_results = {}
+        for t in thresholds:
+            groups = find_duplicate_groups(docs, threshold=t)
+            sweep_results[t] = groups
+            sizes = f", sizes={[len(g) for g in groups]}" if groups else ""
+            print(f"  {t:.3f}: {len(groups)} group(s){sizes}")
+
+        loosest_groups = sweep_results[thresholds[0]]
+        if loosest_groups:
+            print(f"\nPairwise similarity within each group at the loosest threshold tested "
+                  f"({thresholds[0]:.3f}) -- a pair below {thresholds[-1]:.3f} (the strictest "
+                  f"threshold tested) means that pair alone wouldn't clear your strict end; "
+                  f"the group only holds together via a chain through a third doc:\n")
+            for g in loosest_groups:
+                print(f"  group of {len(g)}:")
+                for a, b, sim in group_pairwise_similarities(by_path, g):
+                    flag = "" if sim >= thresholds[-1] else "  <-- below strictest threshold tested"
+                    print(f"    {sim:.4f}  {a}\n             {b}{flag}")
+                print()
+
+        if args.out:
+            out_path = Path(args.out).expanduser()
+            out_path.parent.mkdir(parents=True, exist_ok=True)
+            out_path.write_text(json.dumps(
+                {"thresholds": thresholds,
+                 "groups_by_threshold": {f"{t:.4f}": g for t, g in sweep_results.items()}}, indent=2))
+            print(f"wrote {args.out}")
+        return 0
 
     groups = find_duplicate_groups(docs, threshold=args.threshold)
     if not groups:
@@ -482,7 +558,9 @@ def cmd_dedup(args: argparse.Namespace) -> int:
         print()
 
     if args.out:
-        Path(args.out).expanduser().write_text(json.dumps({"threshold": args.threshold, "groups": groups}, indent=2))
+        out_path = Path(args.out).expanduser()
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(json.dumps({"threshold": args.threshold, "groups": groups}, indent=2))
         print(f"wrote {args.out}")
     return 0
 
@@ -613,6 +691,11 @@ def main() -> int:
     p.add_argument("--threshold", type=float, default=0.85,
                     help="min cosine similarity to group as duplicates (default %(default)s; "
                          "lower finds more/looser matches, higher finds fewer/stricter ones)")
+    p.add_argument("--sweep", metavar="START:STOP:STEP",
+                    help="ignore --threshold; run at every threshold in this range and show "
+                         "each candidate group's pairwise similarities, so you can see which "
+                         "matches are solid (all pairs high) vs. a fragile transitive chain "
+                         "(e.g. --sweep 0.80:0.95:0.05)")
     p.add_argument("--out", default=".memopt/dedup.json")
     p.set_defaults(func=cmd_dedup)
 
