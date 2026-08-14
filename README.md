@@ -33,28 +33,33 @@ use, so it's a drop-in augmentation.
 ## Install
 
 ```bash
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
+
+macOS ships `python3`/`pip3` only — plain `python`/`pip` aren't aliased by
+default (that's `zsh: command not found: pip` / `python`). Use `pip3` /
+`python3` below, or `python -m pip install ...` / alias them yourself if
+you'd rather not type the `3` every time.
 
 ## Usage
 
 ```bash
 # 1. Fix graphify's broken community detection
-python memory_map_optimizer.py cluster \
+python3 memory_map_optimizer.py cluster \
   --graph ~/.graphify/global-graph.json --write-back
 
 # 2. Re-index your memory files with a modern embedding model
-python memory_map_optimizer.py embed \
+python3 memory_map_optimizer.py embed \
   --memory-dir "~/.claude/projects/*/memory/**"
 
 # 3. Search
-python memory_map_optimizer.py search "token optimizer routing" --rerank
+python3 memory_map_optimizer.py search "token optimizer routing" --rerank
 
 # 4. Find merge candidates
-python memory_map_optimizer.py dedup --threshold 0.92
+python3 memory_map_optimizer.py dedup --threshold 0.92
 
 # 5. Regenerate the memory-map report with live numbers
-python memory_map_optimizer.py report --out memory_map_v2.html
+python3 memory_map_optimizer.py report --out memory_map_v2.html
 ```
 
 If your `~/.graphify/global-graph.json` uses different key names than
@@ -94,4 +99,4 @@ itself blocked by that sandbox's network egress. So:
   when `embed`/`cluster` haven't been run yet, and to render real numbers
   once they have.
 
-Run `python test_memory_map_optimizer.py` yourself to see all of the above.
+Run `python3 test_memory_map_optimizer.py` yourself to see all of the above.
