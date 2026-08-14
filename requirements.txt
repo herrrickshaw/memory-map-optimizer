@@ -1,0 +1,9 @@
+# Graph clustering (fixes graphify's broken community detection)
+python-igraph>=0.11
+leidenalg>=0.10
+
+# Embedding + rerank models (Qwen3-Embedding-0.6B / BAAI/bge-m3 / Qwen3-Reranker-0.6B)
+sentence-transformers>=3.0
+
+# BM25 half of hybrid search
+rank-bm25>=0.2

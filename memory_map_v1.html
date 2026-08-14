@@ -1,0 +1,616 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Memory Map</title>
+<style>
+  :root{
+    --bg:#F3F4F1;
+    --surface:#FFFFFF;
+    --surface-2:#EAEBE6;
+    --ink:#16181B;
+    --muted:#5B6169;
+    --faint:#8A9096;
+    --line:#DBDDD6;
+    --accent:#1F6F78;
+    --accent-ink:#0F4048;
+    --accent-soft:#DCEDEE;
+    --ok:#2F7D4F;
+    --ok-soft:#E1F0E5;
+    --warn:#9A6B1F;
+    --warn-soft:#F5E9D3;
+    --bad:#A23E3E;
+    --bad-soft:#F3E0DE;
+    --font-display: "Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --font-body: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    --font-mono: ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#15181B;
+      --surface:#1C2024;
+      --surface-2:#242830;
+      --ink:#ECEEF0;
+      --muted:#9BA3AC;
+      --faint:#6C747C;
+      --line:#31373E;
+      --accent:#4FB8C4;
+      --accent-ink:#BFEAEE;
+      --accent-soft:#1E3538;
+      --ok:#5FBE85;
+      --ok-soft:#1E3327;
+      --warn:#D9A94A;
+      --warn-soft:#3A2F17;
+      --bad:#E08A8A;
+      --bad-soft:#3A2323;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#15181B;
+    --surface:#1C2024;
+    --surface-2:#242830;
+    --ink:#ECEEF0;
+    --muted:#9BA3AC;
+    --faint:#6C747C;
+    --line:#31373E;
+    --accent:#4FB8C4;
+    --accent-ink:#BFEAEE;
+    --accent-soft:#1E3538;
+    --ok:#5FBE85;
+    --ok-soft:#1E3327;
+    --warn:#D9A94A;
+    --warn-soft:#3A2F17;
+    --bad:#E08A8A;
+    --bad-soft:#3A2323;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:15.5px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:2.5rem 1.5rem 6rem;}
+
+  /* ---------- Header ---------- */
+  header.top{
+    display:flex;
+    flex-direction:column;
+    gap:.9rem;
+    padding-bottom:1.75rem;
+    border-bottom:1px solid var(--line);
+    margin-bottom:1.75rem;
+  }
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:.72rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--accent);
+    font-weight:600;
+  }
+  h1{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:2.5rem;
+    line-height:1.08;
+    margin:0;
+    letter-spacing:-0.01em;
+    text-wrap:balance;
+    color:var(--ink);
+  }
+  .dek{
+    max-width:62ch;
+    color:var(--muted);
+    font-size:1.02rem;
+    margin:0;
+  }
+  .stat-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.6rem;
+    margin-top:.4rem;
+  }
+  .stat{
+    display:flex;
+    align-items:baseline;
+    gap:.4rem;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:.5rem .85rem;
+  }
+  .stat b{
+    font-family:var(--font-mono);
+    font-variant-numeric:tabular-nums;
+    font-size:1.05rem;
+    color:var(--accent-ink, var(--accent));
+  }
+  .stat span{font-size:.78rem;color:var(--muted);}
+
+  /* ---------- Nav ---------- */
+  nav.jump{
+    position:sticky;
+    top:0;
+    z-index:5;
+    display:flex;
+    gap:.4rem;
+    flex-wrap:wrap;
+    background:var(--bg);
+    padding:.75rem 0;
+    margin-bottom:1.5rem;
+    border-bottom:1px solid var(--line);
+  }
+  nav.jump a{
+    font-family:var(--font-mono);
+    font-size:.74rem;
+    letter-spacing:.02em;
+    color:var(--muted);
+    text-decoration:none;
+    padding:.35rem .7rem;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background:var(--surface);
+    white-space:nowrap;
+  }
+  nav.jump a:hover, nav.jump a:focus-visible{color:var(--accent);border-color:var(--accent);}
+  nav.jump a:focus-visible{outline:2px solid var(--accent);outline-offset:1px;}
+
+  section{margin-bottom:3.25rem;}
+  h2{
+    font-family:var(--font-display);
+    font-size:1.55rem;
+    font-weight:600;
+    margin:0 0 .3rem;
+    letter-spacing:-0.005em;
+    text-wrap:balance;
+  }
+  .lede{color:var(--muted);max-width:70ch;margin:0 0 1.4rem;font-size:.96rem;}
+
+  /* ---------- Tiers ---------- */
+  .tiers{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden;
+  }
+  .tier{
+    background:var(--surface);
+    padding:1.25rem 1.3rem;
+    display:flex;
+    flex-direction:column;
+    gap:.5rem;
+  }
+  .tier .n{
+    font-family:var(--font-mono);
+    font-size:.7rem;
+    color:var(--faint);
+    letter-spacing:.08em;
+  }
+  .tier h3{margin:0;font-size:1.02rem;font-weight:700;}
+  .tier p{margin:0;color:var(--muted);font-size:.87rem;}
+  .tier .ex{
+    margin-top:.3rem;
+    font-family:var(--font-mono);
+    font-size:.74rem;
+    color:var(--accent-ink,var(--accent));
+    background:var(--accent-soft);
+    padding:.3rem .5rem;
+    border-radius:6px;
+    display:inline-block;
+    width:fit-content;
+  }
+
+  /* ---------- Routing table ---------- */
+  .routing{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1rem;
+  }
+  .tool-card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:1.1rem 1.2rem 1.3rem;
+    display:flex;
+    flex-direction:column;
+    gap:.55rem;
+  }
+  .tool-card header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.5rem;
+  }
+  .tool-card h3{margin:0;font-size:1.05rem;font-family:var(--font-mono);letter-spacing:-0.01em;}
+  .pill{
+    font-family:var(--font-mono);
+    font-size:.68rem;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    padding:.2rem .55rem;
+    border-radius:999px;
+    font-weight:700;
+    white-space:nowrap;
+  }
+  .pill.ok{background:var(--ok-soft);color:var(--ok);}
+  .pill.bad{background:var(--bad-soft);color:var(--bad);}
+  .tool-card .metric{
+    font-family:var(--font-mono);
+    font-variant-numeric:tabular-nums;
+    font-size:.83rem;
+    color:var(--ink);
+  }
+  .tool-card .metric b{color:var(--accent-ink,var(--accent));}
+  .tool-card p.role{margin:.15rem 0 0;font-size:.87rem;color:var(--muted);}
+  .tool-card p.role b{color:var(--ink);font-weight:600;}
+
+  /* ---------- Clusters ---------- */
+  .clusters{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:1rem;
+  }
+  .cluster{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:1.1rem 1.2rem;
+    display:flex;
+    flex-direction:column;
+    gap:.6rem;
+  }
+  .cluster .head{display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;}
+  .cluster h3{margin:0;font-size:.98rem;font-weight:700;}
+  .cluster .count{font-family:var(--font-mono);font-size:.72rem;color:var(--faint);font-variant-numeric:tabular-nums;}
+  .cluster .hub{
+    font-size:.78rem;
+    color:var(--accent-ink,var(--accent));
+    font-family:var(--font-mono);
+  }
+  .cluster ul{
+    margin:0;
+    padding:0;
+    list-style:none;
+    display:flex;
+    flex-direction:column;
+    gap:.3rem;
+  }
+  .cluster li{
+    font-size:.82rem;
+    color:var(--muted);
+    font-family:var(--font-mono);
+    line-height:1.4;
+    word-break:break-word;
+  }
+  .cluster li.more{color:var(--faint);font-style:italic;font-family:var(--font-body);}
+
+  /* ---------- Resource table ---------- */
+  .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface);}
+  table{width:100%;border-collapse:collapse;font-size:.86rem;min-width:640px;}
+  th,td{text-align:left;padding:.65rem .9rem;border-bottom:1px solid var(--line);vertical-align:top;}
+  th{
+    font-family:var(--font-mono);
+    font-size:.7rem;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--faint);
+    font-weight:600;
+    background:var(--surface-2);
+  }
+  tr:last-child td{border-bottom:none;}
+  td.path{font-family:var(--font-mono);color:var(--accent-ink,var(--accent));font-size:.8rem;}
+  td.note{color:var(--muted);}
+
+  /* ---------- Changelog ---------- */
+  .changelog{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:1.2rem 1.3rem;
+    display:flex;
+    flex-direction:column;
+    gap:.9rem;
+  }
+  .clrow{display:grid;grid-template-columns:110px 1fr;gap:1rem;align-items:start;}
+  .clrow .tag{
+    font-family:var(--font-mono);
+    font-size:.7rem;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    font-weight:700;
+    padding:.25rem .5rem;
+    border-radius:6px;
+    width:fit-content;
+    height:fit-content;
+  }
+  .clrow .tag.del{background:var(--bad-soft);color:var(--bad);}
+  .clrow .tag.merge{background:var(--warn-soft);color:var(--warn);}
+  .clrow .tag.add{background:var(--ok-soft);color:var(--ok);}
+  .clrow p{margin:0;font-size:.85rem;color:var(--muted);}
+  .clrow p b{color:var(--ink);font-weight:600;}
+  .clrow p code{font-family:var(--font-mono);font-size:.82rem;color:var(--ink);background:var(--surface-2);padding:.05rem .3rem;border-radius:4px;}
+
+  footer{
+    margin-top:2rem;
+    padding-top:1.25rem;
+    border-top:1px solid var(--line);
+    color:var(--faint);
+    font-size:.78rem;
+    font-family:var(--font-mono);
+  }
+
+  @media (max-width:820px){
+    .tiers{grid-template-columns:1fr;}
+    .routing{grid-template-columns:1fr;}
+    h1{font-size:2rem;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{scroll-behavior:auto !important;}
+  }
+  html{scroll-behavior:smooth;}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="top">
+    <div class="eyebrow">Memory system audit — 2026-08-12</div>
+    <h1>Memory Map</h1>
+    <p class="dek">A tiered index of everything Claude has persisted about this workspace — what's stored, how it clusters, which retrieval tool actually owns which question, and where each credential really lives. Built after 121 memory files accumulated with no cross-file structure, which is what the "running in loops" feeling traced back to.</p>
+    <div class="stat-row">
+      <div class="stat"><b>108</b><span>files, post-cleanup</span></div>
+      <div class="stat"><b>51</b><span>project</span></div>
+      <div class="stat"><b>30</b><span>feedback</span></div>
+      <div class="stat"><b>25</b><span>reference</span></div>
+      <div class="stat"><b>18</b><span>removed / merged away</span></div>
+    </div>
+  </header>
+
+  <nav class="jump">
+    <a href="#tiers">Tiers</a>
+    <a href="#routing">Tool routing</a>
+    <a href="#clusters">Thematic clusters</a>
+    <a href="#resources">Resource access</a>
+    <a href="#changelog">Cleanup log</a>
+  </nav>
+
+  <section id="tiers">
+    <h2>How memory is tiered</h2>
+    <p class="lede">Three layers, in order of durability. This structure already existed — the gap was that 121 files sat flat inside tier 2 with no map across them.</p>
+    <div class="tiers">
+      <div class="tier">
+        <span class="n">TIER 1 — DURABLE RULES</span>
+        <h3>CLAUDE.md</h3>
+        <p>Hand-maintained, loaded every session. Global (<code></code>) + per-project instructions.</p>
+        <span class="ex">~/.claude/CLAUDE.md</span>
+      </div>
+      <div class="tier">
+        <span class="n">TIER 2 — AUTO MEMORY</span>
+        <h3>4 typed files</h3>
+        <p><b>user</b> (who you are) · <b>feedback</b> (corrections &amp; confirmations) · <b>project</b> (ongoing context) · <b>reference</b> (external pointers).</p>
+        <span class="ex">~/.claude/projects/.../memory/</span>
+      </div>
+      <div class="tier">
+        <span class="n">TIER 3 — SESSION</span>
+        <h3>Live context</h3>
+        <p>The current conversation and open files. Never persisted here — gone at session end unless promoted to tier 2.</p>
+        <span class="ex">in-context only</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="routing">
+    <h2>Retrieval tool routing</h2>
+    <p class="lede">Live-verified 2026-08-12. The three overlapping tools don't actually cover the same ground — except one had gone quietly empty, and the old instructions kept routing through it anyway.</p>
+    <div class="routing">
+      <div class="tool-card">
+        <header><h3>graphify</h3><span class="pill ok">alive</span></header>
+        <p class="metric"><b>31,896</b> nodes · <b>52,071</b> edges · 27 repos cloned</p>
+        <p class="role">Owns: <b>"where is this code defined"</b>. Real launchd daemon, port 8765. Community detection is advertised but returns 0 — don't rely on it.</p>
+      </div>
+      <div class="tool-card">
+        <header><h3>qmd</h3><span class="pill ok">alive</span></header>
+        <p class="metric"><b>142</b> docs indexed · cron 07:10 daily</p>
+        <p class="role">Owns: <b>"what did I decide before"</b>. BM25 + semantic search over every memory file. This is the tool doing the real work.</p>
+      </div>
+      <div class="tool-card">
+        <header><h3>ruflo memory</h3><span class="pill bad">empty</span></header>
+        <p class="metric"><b>0</b> entries · 0% embedding coverage</p>
+        <p class="role">Was the documented <b>fallback</b> on every retrieval miss — a dead-end hop on every query. Removed from CLAUDE.md. Orchestration/hooks parts of ruflo still work fine.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="clusters">
+    <h2>Thematic clusters</h2>
+    <p class="lede">Every active project/reference/feedback memory, grouped by subject rather than by file-creation order. Hub nodes carry the most cross-links.</p>
+    <div class="clusters">
+
+      <div class="cluster">
+        <div class="head"><h3>Market data pipeline &amp; warehouse</h3><span class="count">13</span></div>
+        <span class="hub">hub → market_data_warehouse</span>
+        <ul>
+          <li>fundamentals_bridge</li>
+          <li>global_fundamentals_layer</li>
+          <li>intl_pit_and_ticker_reference</li>
+          <li>market_tiers_and_weekly_scan</li>
+          <li>colibri_stock_extraction</li>
+          <li>nsepython · exchange_universe</li>
+          <li class="more">+ 6 more</li>
+        </ul>
+      </div>
+
+      <div class="cluster">
+        <div class="head"><h3>Daily mailer / reporting</h3><span class="count">9</span></div>
+        <span class="hub">hub → daily_combined_report</span>
+        <ul>
+          <li>watchlist_mailer</li>
+          <li>mailer_duplicate_send</li>
+          <li>dashboard_schedule</li>
+          <li>weekly_maintenance</li>
+          <li>reentry_engine · per_market_zone_rules</li>
+          <li class="more">+ 3 more</li>
+        </ul>
+      </div>
+
+      <div class="cluster">
+        <div class="head"><h3>Screener / strategy research</h3><span class="count">11</span></div>
+        <span class="hub">hub → piotroski_backtests</span>
+        <ul>
+          <li>piotroski_plus · pe_anomaly_backtests</li>
+          <li>liquidity_scan_research</li>
+          <li>cost_capacity</li>
+          <li>systematic_strategy_platform</li>
+          <li>price_prediction_backtest</li>
+          <li class="more">+ 5 more, incl. a self-flagged "don't trust this" node</li>
+        </ul>
+      </div>
+
+      <div class="cluster">
+        <div class="head"><h3>Repo / LFS / data hygiene</h3><span class="count">10</span></div>
+        <span class="hub">hub → repo_portfolio_governance</span>
+        <ul>
+          <li>repo_data_dedup</li>
+          <li>gss_lfs_retirement</li>
+          <li>secret_purge_2026_07</li>
+          <li>cloud_backup_gdrive</li>
+          <li>dropbox_reorg_2026_08</li>
+          <li class="more">+ 5 more</li>
+        </ul>
+      </div>
+
+      <div class="cluster">
+        <div class="head"><h3>India govt data / digital twin</h3><span class="count">13</span></div>
+        <span class="hub">hub → digital_twin_ipa</span>
+        <ul>
+          <li>india_ministry_site_access</li>
+          <li>industrial_land_bank_access</li>
+          <li>sansad_pq_api · pib_index</li>
+          <li>mospi_connector</li>
+          <li>india_pli_beneficiary_rosters</li>
+          <li class="more">+ 7 more</li>
+        </ul>
+      </div>
+
+      <div class="cluster">
+        <div class="head"><h3>Blog / masaladeutsch</h3><span class="count">11</span></div>
+        <span class="hub">hub → masaladeutsch_archive</span>
+        <ul>
+          <li>blogger_api · blogger_bulk_injection</li>
+          <li>blogger_editor_save_recipe</li>
+          <li>masaladeutsch_display_standard</li>
+          <li>masaladeutsch_post_template</li>
+          <li class="more">+ 6 more</li>
+        </ul>
+      </div>
+
+      <div class="cluster">
+        <div class="head"><h3>Token optimization / AI tooling</h3><span class="count">9</span></div>
+        <span class="hub">hub → token_optimizer_status</span>
+        <ul>
+          <li>token_efficiency_sop</li>
+          <li>ruflo_token_monitoring</li>
+          <li>model_routing_policy</li>
+          <li>qmd_search · graphify_knowledge_graphs</li>
+          <li class="more">+ 4 more, incl. today's routing fix</li>
+        </ul>
+      </div>
+
+      <div class="cluster">
+        <div class="head"><h3>Credential / security governance</h3><span class="count">5</span></div>
+        <span class="hub">hub → canonical_credential_store</span>
+        <ul>
+          <li>secrets_stay_local</li>
+          <li>credential_entry_boundary</li>
+          <li>public_push_classifier</li>
+          <li>secret_purge_2026_07</li>
+        </ul>
+      </div>
+
+      <div class="cluster">
+        <div class="head"><h3>macOS / sandbox / infra hazards</h3><span class="count">7</span></div>
+        <span class="hub">no single hub — standing gotchas</span>
+        <ul>
+          <li>cloudstorage_ondemand_hashing</li>
+          <li>downloads_tree_hazard</li>
+          <li>no_script_edit_while_running</li>
+          <li>sqlite_macos · cron_line_verification</li>
+          <li class="more">+ 2 more</li>
+        </ul>
+      </div>
+
+      <div class="cluster">
+        <div class="head"><h3>Standalone</h3><span class="count">11</span></div>
+        <span class="hub">no cluster — kept independent</span>
+        <ul>
+          <li>vehicle_fuel_cost · saf_monitoring_system</li>
+          <li>generated_files_index</li>
+          <li>global_data_library</li>
+          <li>user_profile · cbse_paper_corpus</li>
+          <li class="more">+ 5 more</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="resources">
+    <h2>Resource &amp; credential access map</h2>
+    <p class="lede">Locations only — no secret values live in this table or were copied into any memory file while building it.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Resource</th><th>Where it actually lives</th><th>Governing memory</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>All market-data API keys (23)</td><td class="path">~/.config/market-secrets/credentials.env</td><td class="note">canonical_credential_store</td></tr>
+          <tr><td>Postgres market_data</td><td class="path">host=/tmp user=umashankar, no password</td><td class="note">market_data_warehouse</td></tr>
+          <tr><td>graphify global graph</td><td class="path">~/.graphify/global-graph.json · MCP :8765</td><td class="note">graphify_knowledge_graphs</td></tr>
+          <tr><td>qmd index</td><td class="path">~/.ruflo/ + memory dir · cron 07:10</td><td class="note">qmd_search</td></tr>
+          <tr><td>Off-machine backup</td><td class="path">rclone dual-provider → Dropbox</td><td class="note">cloud_backup_gdrive</td></tr>
+          <tr><td>GitHub repo governance</td><td class="path">repos.yaml + gitleaks CI</td><td class="note">repo_portfolio_governance</td></tr>
+          <tr><td>Gmail</td><td class="path">create_draft only — no send tool</td><td class="note">gmail_mcp_no_send</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="changelog">
+    <h2>Cleanup performed today</h2>
+    <p class="lede">121 → 108 files. Every removal was self-flagged in the file's own text as retired, complete, or torn down — nothing was cut on a guess.</p>
+    <div class="changelog">
+      <div class="clrow">
+        <span class="tag del">deleted · 8</span>
+        <p>mempalace_setup, aws_ec2_account, all_repos_made_public, bhavcopy_phase1, event_driven_deployment, github_repo_hygiene, claude_archive, data_validation — each explicitly self-marked <b>RETIRED</b> / <b>COMPLETE</b> / <b>TEARDOWN COMPLETE</b> with no forward dependency.</p>
+      </div>
+      <div class="clrow">
+        <span class="tag merge">merged · 10 → 3</span>
+        <p>4 sequential token-optimizer snapshots → <code>token_optimizer_status</code>; nsepython api+limits → <code>reference_nsepython</code>; 3 legacy India/US screener scripts → <code>legacy_screener_scripts</code>; the data-linkage audit folded into <code>market_data_warehouse</code> as a section.</p>
+      </div>
+      <div class="clrow">
+        <span class="tag add">indexed · 3</span>
+        <p>colab_offload_standard, no_script_edit_while_running, gmail_mcp_no_send — existed on disk, useful, never linked from MEMORY.md.</p>
+      </div>
+      <div class="clrow">
+        <span class="tag add">new · 2</span>
+        <p><code>reference_retrieval_tool_routing</code> (this audit's findings) and this map itself, <code>reference_memory_map</code> — plus a fix to <code>~/.claude/CLAUDE.md</code> removing the dead ruflo-memory fallback.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>reference_memory_map · reference_retrieval_tool_routing · built 2026-08-12</footer>
+
+</div>
+
+</body>
+</html>
