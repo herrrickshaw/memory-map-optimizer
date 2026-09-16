@@ -1,0 +1,26 @@
+name: quality-gates
+# Secrets gate for anything that commits via the GitHub API and bypasses the
+# local gitleaks pre-commit hook (web-UI edits, coding agents, other machines).
+# Matches the herrrickshaw repo-portfolio convention.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gitleaks:
+    name: secrets (working tree)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install gitleaks
+        run: |
+          curl -fsSL https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz \
+            | tar -xz gitleaks
+          sudo mv gitleaks /usr/local/bin/gitleaks
+      - name: Scan working tree for secrets
+        run: gitleaks detect --no-git --redact --no-banner --source .
