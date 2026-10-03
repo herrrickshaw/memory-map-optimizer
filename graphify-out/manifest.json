@@ -1,0 +1,50 @@
+{
+  "memory_map_optimizer.py": {
+    "mtime": 1786693850.6744108,
+    "seen": 1789193316.488153,
+    "ast_hash": "2aec6edcda7f96fc861d6cf10b767062",
+    "semantic_hash": ""
+  },
+  "test_memory_map_optimizer.py": {
+    "mtime": 1786693850.6751027,
+    "seen": 1789193316.4881558,
+    "ast_hash": "305e5f562a368746a5f48ee2cb5f82ae",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1786689944.2436454,
+    "seen": 1789193316.488158,
+    "ast_hash": "33c9a47c33fc70e20da9bf88ff8d68e4",
+    "semantic_hash": ""
+  },
+  "RECREATE_VENV.md": {
+    "mtime": 1787717838.7098782,
+    "seen": 1789193316.488158,
+    "ast_hash": "1eecf4103ed9b47ba436b10ce36b593a",
+    "semantic_hash": ""
+  },
+  "memory_map_v1.html": {
+    "mtime": 1786681345.6534457,
+    "seen": 1789193316.488159,
+    "ast_hash": "187d8ca67c594f09fc621f80103e9ef5",
+    "semantic_hash": ""
+  },
+  "memory_map_v2.html": {
+    "mtime": 1786685638.4554133,
+    "seen": 1789193316.48816,
+    "ast_hash": "16e98127d5be6490d87c01befc42223e",
+    "semantic_hash": ""
+  },
+  "requirements.txt": {
+    "mtime": 1786681345.6536694,
+    "seen": 1789193316.488161,
+    "ast_hash": "a4228f9704ecd8bd5e3128589ded3845",
+    "semantic_hash": ""
+  },
+  ".github/workflows/quality-gates.yml": {
+    "mtime": 1789577666.6569948,
+    "seen": 1789968791.933913,
+    "ast_hash": "510f7e392c07f0574ba8a559ba2cdf12",
+    "semantic_hash": ""
+  }
+}

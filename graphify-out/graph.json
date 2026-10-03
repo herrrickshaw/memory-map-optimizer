@@ -1,0 +1,2349 @@
+{
+  "hyperedges": [],
+  "input_tokens": 0,
+  "output_tokens": 0,
+  "nodes": [
+    {
+      "id": "memory_map_optimizer",
+      "label": "memory_map_optimizer.py",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_load_graph_json",
+      "label": "_load_graph_json()",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L78",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "path",
+      "label": "Path",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_clusterresult",
+      "label": "ClusterResult",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L130",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_clusterresult_to_json",
+      "label": ".to_json()",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L137",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_run_leiden",
+      "label": "run_leiden()",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L148",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_cmd_cluster",
+      "label": "cmd_cluster()",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L186",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "namespace",
+      "label": "Namespace",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_memorydoc",
+      "label": "MemoryDoc",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L233",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_read_memory_files",
+      "label": "_read_memory_files()",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L240",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_embed_texts",
+      "label": "_embed_texts()",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L258",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_build_index",
+      "label": "build_index()",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L281",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_cmd_embed",
+      "label": "cmd_embed()",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L295",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_load_index",
+      "label": "load_index()",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L320",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_cosine",
+      "label": "cosine()",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L326",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_tokenize",
+      "label": "_tokenize()",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L335",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_hybrid_search",
+      "label": "hybrid_search()",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L343",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_predict_rerank_scores",
+      "label": "_predict_rerank_scores()",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L372",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_rerank",
+      "label": "rerank()",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L390",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_cmd_search",
+      "label": "cmd_search()",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L400",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_find_duplicate_groups",
+      "label": "find_duplicate_groups()",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L424",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_find_duplicate_groups_find",
+      "label": "find()",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L443",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_find_duplicate_groups_union",
+      "label": "union()",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L449",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_group_pairwise_similarities",
+      "label": "group_pairwise_similarities()",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L466",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_parse_sweep_arg",
+      "label": "_parse_sweep_arg()",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L486",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_cmd_dedup",
+      "label": "cmd_dedup()",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L503",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_cmd_report",
+      "label": "cmd_report()",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L606",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_main",
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L649",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_rationale_2",
+      "label": "memory_map_optimizer.py ======================== Standalone optimizer for a…",
+      "file_type": "rationale",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L2",
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_rationale_81",
+      "label": "Tolerant loader for graphify-style graph JSON. Two shapes handled: {\"nodes\":…",
+      "file_type": "rationale",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L81",
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_rationale_150",
+      "label": "Leiden community detection (Traag, Waltman & van Eck 2019) -- strictly better…",
+      "file_type": "rationale",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L150",
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_rationale_261",
+      "label": "Isolated so the rest of the pipeline is testable without a real model download…",
+      "file_type": "rationale",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L261",
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_rationale_345",
+      "label": "Reciprocal-rank fusion of BM25 and embedding cosine similarity -- avoids having…",
+      "file_type": "rationale",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L345",
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_rationale_375",
+      "label": "Isolated so rerank()'s ordering logic is testable without a real model…",
+      "file_type": "rationale",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L375",
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_rationale_425",
+      "label": "Groups files whose embeddings are mutually similar above *threshold* into merge…",
+      "file_type": "rationale",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L425",
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_rationale_468",
+      "label": "All pairwise cosine similarities among the docs in one merge-candidate group,…",
+      "file_type": "rationale",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L468",
+      "_origin": "ast"
+    },
+    {
+      "id": "memory_map_optimizer_rationale_487",
+      "label": "Parses \"START:STOP:STEP\" (e.g. \"0.80:0.95:0.05\") into a threshold list,…",
+      "file_type": "rationale",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L487",
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer",
+      "label": "test_memory_map_optimizer.py",
+      "file_type": "code",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_test_load_graph_json_dict_shape",
+      "label": "test_load_graph_json_dict_shape()",
+      "file_type": "code",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L23",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_test_load_graph_json_dangling_edge_endpoint",
+      "label": "test_load_graph_json_dangling_edge_endpoint()",
+      "file_type": "code",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L37",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_test_load_graph_json_edge_list_shape",
+      "label": "test_load_graph_json_edge_list_shape()",
+      "file_type": "code",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L58",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_synthetic_graph",
+      "label": "_synthetic_graph()",
+      "file_type": "code",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L69",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_test_leiden_finds_real_communities",
+      "label": "test_leiden_finds_real_communities()",
+      "file_type": "code",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L88",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_test_leiden_no_edges_still_returns_result",
+      "label": "test_leiden_no_edges_still_returns_result()",
+      "file_type": "code",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L107",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_unit_vec",
+      "label": "_unit_vec()",
+      "file_type": "code",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L114",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_test_cosine_known_values",
+      "label": "test_cosine_known_values()",
+      "file_type": "code",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L122",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_test_build_index_threads_max_seq_length_and_batch_size",
+      "label": "test_build_index_threads_max_seq_length_and_batch_size()",
+      "file_type": "code",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L130",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_test_build_index_threads_max_seq_length_and_batch_size_fake_embed_fn",
+      "label": "fake_embed_fn()",
+      "file_type": "code",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L139",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_test_rerank_threads_max_length_and_batch_size_and_reorders",
+      "label": "test_rerank_threads_max_length_and_batch_size_and_reorders()",
+      "file_type": "code",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L152",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_test_rerank_threads_max_length_and_batch_size_and_reorders_fake_predict_fn",
+      "label": "fake_predict_fn()",
+      "file_type": "code",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L161",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_test_hybrid_search_ranks_relevant_doc_first",
+      "label": "test_hybrid_search_ranks_relevant_doc_first()",
+      "file_type": "code",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L180",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_test_find_duplicate_groups_merges_transitively",
+      "label": "test_find_duplicate_groups_merges_transitively()",
+      "file_type": "code",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L199",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_test_find_duplicate_groups_merges_transitively_near",
+      "label": "near()",
+      "file_type": "code",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L204",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_test_find_duplicate_groups_exact_hash_match_always_grouped",
+      "label": "test_find_duplicate_groups_exact_hash_match_always_grouped()",
+      "file_type": "code",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L221",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_test_group_pairwise_similarities_flags_transitive_chain",
+      "label": "test_group_pairwise_similarities_flags_transitive_chain()",
+      "file_type": "code",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L233",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_test_parse_sweep_arg",
+      "label": "test_parse_sweep_arg()",
+      "file_type": "code",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L254",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_test_report_runs_without_index_or_clusters",
+      "label": "test_report_runs_without_index_or_clusters()",
+      "file_type": "code",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L272",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_rationale_2",
+      "label": "Exercises memory_map_optimizer.py's logic with synthetic data, standing in for…",
+      "file_type": "rationale",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L2",
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_rationale_38",
+      "label": "Regression test for the real graphify data: an edge referencing a node id…",
+      "file_type": "rationale",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L38",
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_rationale_70",
+      "label": "Build a graph with real community structure: dense within-cluster edges, sparse…",
+      "file_type": "rationale",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L70",
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_rationale_108",
+      "label": "Isolated nodes (no edges at all) shouldn't crash -- each node its own community.",
+      "file_type": "rationale",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L108",
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_rationale_115",
+      "label": "Deterministic pseudo-random unit vector for doc index n.",
+      "file_type": "rationale",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L115",
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_rationale_131",
+      "label": "Regression test for the real crash: an unbounded-length memory file made…",
+      "file_type": "rationale",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L131",
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_rationale_153",
+      "label": "Regression test for the real crash: --rerank hit an MPS out-of-memory error the…",
+      "file_type": "rationale",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L153",
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_rationale_234",
+      "label": "Regression test for the real Piotroski false-positive: a group of 2 where…",
+      "file_type": "rationale",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L234",
+      "_origin": "ast"
+    },
+    {
+      "id": "test_memory_map_optimizer_rationale_273",
+      "label": "report must degrade gracefully when embed/cluster haven't run yet -- this is…",
+      "file_type": "rationale",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L273",
+      "_origin": "ast"
+    },
+    {
+      "id": "readme",
+      "label": "README.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "source_file": "README.md",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "readme_memory_map_optimizer",
+      "label": "memory-map-optimizer",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "README.md",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "readme_install",
+      "label": "Install",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "README.md",
+      "source_location": "L33",
+      "_origin": "ast"
+    },
+    {
+      "id": "readme_usage",
+      "label": "Usage",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "README.md",
+      "source_location": "L49",
+      "_origin": "ast"
+    },
+    {
+      "id": "readme_what_s_tested_vs_not_read_this_before_trusting_output",
+      "label": "What's tested vs. not (read this before trusting output)",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "README.md",
+      "source_location": "L76",
+      "_origin": "ast"
+    },
+    {
+      "id": "recreate_venv",
+      "label": "RECREATE_VENV.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "source_file": "RECREATE_VENV.md",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "recreate_venv_venv_removed_2026_08_26_to_reclaim_1_gb_project_dormant_since_aug_15",
+      "label": "venv removed 2026-08-26 to reclaim ~1 GB (project dormant since Aug-15).",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "RECREATE_VENV.md",
+      "source_location": "L1",
+      "_origin": "ast"
+    }
+  ],
+  "links": [
+    {
+      "source": "memory_map_optimizer",
+      "target": "argparse",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L59",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "glob",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L60",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "hashlib",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L61",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "json",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L62",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "sys",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L63",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "dataclasses",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L64",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "pathlib",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L65",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "typing",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L66",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "memory_map_optimizer_load_graph_json",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L78",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_load_graph_json",
+      "target": "path",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L78",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "memory_map_optimizer_clusterresult",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L130",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_clusterresult",
+      "target": "memory_map_optimizer_clusterresult_to_json",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L137",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "memory_map_optimizer_run_leiden",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L148",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_run_leiden",
+      "target": "memory_map_optimizer_clusterresult",
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L148",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "memory_map_optimizer_cmd_cluster",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L186",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_cmd_cluster",
+      "target": "namespace",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L186",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "memory_map_optimizer_memorydoc",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L233",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "memory_map_optimizer_read_memory_files",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L240",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "memory_map_optimizer_embed_texts",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L258",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "memory_map_optimizer_build_index",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L281",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_build_index",
+      "target": "memory_map_optimizer_memorydoc",
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L281",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "memory_map_optimizer_cmd_embed",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L295",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_cmd_embed",
+      "target": "namespace",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L295",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "memory_map_optimizer_load_index",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L320",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_load_index",
+      "target": "path",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L320",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_load_index",
+      "target": "memory_map_optimizer_memorydoc",
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L320",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "memory_map_optimizer_cosine",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L326",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "memory_map_optimizer_tokenize",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L335",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "memory_map_optimizer_hybrid_search",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L343",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_hybrid_search",
+      "target": "memory_map_optimizer_memorydoc",
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L343",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "memory_map_optimizer_predict_rerank_scores",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L372",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "memory_map_optimizer_rerank",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L390",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_rerank",
+      "target": "memory_map_optimizer_memorydoc",
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L390",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "memory_map_optimizer_cmd_search",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L400",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_cmd_search",
+      "target": "namespace",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L400",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "memory_map_optimizer_find_duplicate_groups",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L424",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_find_duplicate_groups",
+      "target": "memory_map_optimizer_memorydoc",
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L424",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_find_duplicate_groups",
+      "target": "memory_map_optimizer_find_duplicate_groups_find",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L443",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_find_duplicate_groups",
+      "target": "memory_map_optimizer_find_duplicate_groups_union",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L449",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "memory_map_optimizer_group_pairwise_similarities",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L466",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "memory_map_optimizer_parse_sweep_arg",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L486",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "memory_map_optimizer_cmd_dedup",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L503",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_cmd_dedup",
+      "target": "namespace",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L503",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "memory_map_optimizer_cmd_report",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L606",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_cmd_report",
+      "target": "namespace",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L606",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer",
+      "target": "memory_map_optimizer_main",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L649",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_run_leiden",
+      "target": "memory_map_optimizer_clusterresult",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L177",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_cmd_cluster",
+      "target": "path",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L187",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_cmd_cluster",
+      "target": "memory_map_optimizer_load_graph_json",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L192",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_cmd_cluster",
+      "target": "memory_map_optimizer_run_leiden",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L202",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_read_memory_files",
+      "target": "path",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L241",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_build_index",
+      "target": "memory_map_optimizer_memorydoc",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L290",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_cmd_embed",
+      "target": "memory_map_optimizer_read_memory_files",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L296",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_cmd_embed",
+      "target": "memory_map_optimizer_build_index",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L303",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_cmd_embed",
+      "target": "path",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L305",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_load_index",
+      "target": "memory_map_optimizer_memorydoc",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L322",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_hybrid_search",
+      "target": "memory_map_optimizer_tokenize",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L355",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_hybrid_search",
+      "target": "memory_map_optimizer_cosine",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L360",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_cmd_search",
+      "target": "path",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L401",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_cmd_search",
+      "target": "memory_map_optimizer_load_index",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L405",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_cmd_search",
+      "target": "memory_map_optimizer_embed_texts",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L407",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_cmd_search",
+      "target": "memory_map_optimizer_hybrid_search",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L408",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_cmd_search",
+      "target": "memory_map_optimizer_rerank",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L411",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_find_duplicate_groups",
+      "target": "memory_map_optimizer_cosine",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L456",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_find_duplicate_groups",
+      "target": "memory_map_optimizer_find_duplicate_groups_union",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L457",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_find_duplicate_groups",
+      "target": "memory_map_optimizer_find_duplicate_groups_find",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L461",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_find_duplicate_groups_union",
+      "target": "memory_map_optimizer_find_duplicate_groups_find",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L450",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_group_pairwise_similarities",
+      "target": "memory_map_optimizer_cosine",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L481",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_cmd_dedup",
+      "target": "path",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L504",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_cmd_dedup",
+      "target": "memory_map_optimizer_load_index",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L508",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_cmd_dedup",
+      "target": "memory_map_optimizer_parse_sweep_arg",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L512",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_cmd_dedup",
+      "target": "memory_map_optimizer_find_duplicate_groups",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L521",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_cmd_dedup",
+      "target": "memory_map_optimizer_group_pairwise_similarities",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L534",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_cmd_report",
+      "target": "path",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L610",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_cmd_report",
+      "target": "memory_map_optimizer_load_index",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L611",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_main",
+      "target": "memory_map_optimizer_cmd_cluster",
+      "relation": "indirect_call",
+      "context": "argument",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L664",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_main",
+      "target": "memory_map_optimizer_cmd_embed",
+      "relation": "indirect_call",
+      "context": "argument",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L675",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_main",
+      "target": "memory_map_optimizer_cmd_search",
+      "relation": "indirect_call",
+      "context": "argument",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L687",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_main",
+      "target": "memory_map_optimizer_cmd_dedup",
+      "relation": "indirect_call",
+      "context": "argument",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L700",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_main",
+      "target": "memory_map_optimizer_cmd_report",
+      "relation": "indirect_call",
+      "context": "argument",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L707",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_rationale_2",
+      "target": "memory_map_optimizer",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_rationale_81",
+      "target": "memory_map_optimizer_load_graph_json",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L81",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_rationale_150",
+      "target": "memory_map_optimizer_run_leiden",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L150",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_rationale_261",
+      "target": "memory_map_optimizer_embed_texts",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L261",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_rationale_345",
+      "target": "memory_map_optimizer_hybrid_search",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L345",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_rationale_375",
+      "target": "memory_map_optimizer_predict_rerank_scores",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L375",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_rationale_425",
+      "target": "memory_map_optimizer_find_duplicate_groups",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L425",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_rationale_468",
+      "target": "memory_map_optimizer_group_pairwise_similarities",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L468",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "memory_map_optimizer_rationale_487",
+      "target": "memory_map_optimizer_parse_sweep_arg",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memory_map_optimizer.py",
+      "source_location": "L487",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer",
+      "target": "json",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L12",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer",
+      "target": "math",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L13",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer",
+      "target": "random",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L14",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer",
+      "target": "sys",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer",
+      "target": "tempfile",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L16",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer",
+      "target": "pathlib",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L17",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer",
+      "target": "memory_map_optimizer",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L20",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer",
+      "target": "test_memory_map_optimizer_test_load_graph_json_dict_shape",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L23",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer",
+      "target": "test_memory_map_optimizer_test_load_graph_json_dangling_edge_endpoint",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L37",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer",
+      "target": "test_memory_map_optimizer_test_load_graph_json_edge_list_shape",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L58",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer",
+      "target": "test_memory_map_optimizer_synthetic_graph",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L69",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer",
+      "target": "test_memory_map_optimizer_test_leiden_finds_real_communities",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer",
+      "target": "test_memory_map_optimizer_test_leiden_no_edges_still_returns_result",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L107",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer",
+      "target": "test_memory_map_optimizer_unit_vec",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L114",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer",
+      "target": "test_memory_map_optimizer_test_cosine_known_values",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L122",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer",
+      "target": "test_memory_map_optimizer_test_build_index_threads_max_seq_length_and_batch_size",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L130",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_build_index_threads_max_seq_length_and_batch_size",
+      "target": "test_memory_map_optimizer_test_build_index_threads_max_seq_length_and_batch_size_fake_embed_fn",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L139",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer",
+      "target": "test_memory_map_optimizer_test_rerank_threads_max_length_and_batch_size_and_reorders",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L152",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_rerank_threads_max_length_and_batch_size_and_reorders",
+      "target": "test_memory_map_optimizer_test_rerank_threads_max_length_and_batch_size_and_reorders_fake_predict_fn",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L161",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer",
+      "target": "test_memory_map_optimizer_test_hybrid_search_ranks_relevant_doc_first",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L180",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer",
+      "target": "test_memory_map_optimizer_test_find_duplicate_groups_merges_transitively",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L199",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_find_duplicate_groups_merges_transitively",
+      "target": "test_memory_map_optimizer_test_find_duplicate_groups_merges_transitively_near",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L204",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer",
+      "target": "test_memory_map_optimizer_test_find_duplicate_groups_exact_hash_match_always_grouped",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L221",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer",
+      "target": "test_memory_map_optimizer_test_group_pairwise_similarities_flags_transitive_chain",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L233",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer",
+      "target": "test_memory_map_optimizer_test_parse_sweep_arg",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L254",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer",
+      "target": "test_memory_map_optimizer_test_report_runs_without_index_or_clusters",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L272",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_leiden_finds_real_communities",
+      "target": "test_memory_map_optimizer_synthetic_graph",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L89",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_build_index_threads_max_seq_length_and_batch_size",
+      "target": "test_memory_map_optimizer_test_build_index_threads_max_seq_length_and_batch_size_fake_embed_fn",
+      "relation": "indirect_call",
+      "context": "argument",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L145",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_rerank_threads_max_length_and_batch_size_and_reorders",
+      "target": "test_memory_map_optimizer_test_rerank_threads_max_length_and_batch_size_and_reorders_fake_predict_fn",
+      "relation": "indirect_call",
+      "context": "argument",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L173",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_find_duplicate_groups_merges_transitively",
+      "target": "test_memory_map_optimizer_unit_vec",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L203",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_find_duplicate_groups_merges_transitively",
+      "target": "test_memory_map_optimizer_test_find_duplicate_groups_merges_transitively_near",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L211",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_rationale_2",
+      "target": "test_memory_map_optimizer",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_rationale_38",
+      "target": "test_memory_map_optimizer_test_load_graph_json_dangling_edge_endpoint",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L38",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_rationale_70",
+      "target": "test_memory_map_optimizer_synthetic_graph",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L70",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_rationale_108",
+      "target": "test_memory_map_optimizer_test_leiden_no_edges_still_returns_result",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L108",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_rationale_115",
+      "target": "test_memory_map_optimizer_unit_vec",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L115",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_rationale_131",
+      "target": "test_memory_map_optimizer_test_build_index_threads_max_seq_length_and_batch_size",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L131",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_rationale_153",
+      "target": "test_memory_map_optimizer_test_rerank_threads_max_length_and_batch_size_and_reorders",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L153",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_rationale_234",
+      "target": "test_memory_map_optimizer_test_group_pairwise_similarities_flags_transitive_chain",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L234",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_rationale_273",
+      "target": "test_memory_map_optimizer_test_report_runs_without_index_or_clusters",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L273",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "readme",
+      "target": "readme_memory_map_optimizer",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "readme_memory_map_optimizer",
+      "target": "readme_install",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L33",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "readme_memory_map_optimizer",
+      "target": "readme_usage",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L49",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "readme_memory_map_optimizer",
+      "target": "readme_what_s_tested_vs_not_read_this_before_trusting_output",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L76",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recreate_venv",
+      "target": "recreate_venv_venv_removed_2026_08_26_to_reclaim_1_gb_project_dormant_since_aug_15",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "RECREATE_VENV.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_load_graph_json_dict_shape",
+      "target": "path",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L25",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_load_graph_json_dangling_edge_endpoint",
+      "target": "path",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L43",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_load_graph_json_edge_list_shape",
+      "target": "path",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L60",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_report_runs_without_index_or_clusters",
+      "target": "path",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L277",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_load_graph_json_dict_shape",
+      "target": "memory_map_optimizer_load_graph_json",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L30",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_load_graph_json_dangling_edge_endpoint",
+      "target": "memory_map_optimizer_load_graph_json",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L49",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_load_graph_json_dangling_edge_endpoint",
+      "target": "memory_map_optimizer_run_leiden",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L53",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_load_graph_json_edge_list_shape",
+      "target": "memory_map_optimizer_load_graph_json",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L62",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_leiden_finds_real_communities",
+      "target": "memory_map_optimizer_run_leiden",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L90",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_leiden_no_edges_still_returns_result",
+      "target": "memory_map_optimizer_run_leiden",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L109",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_cosine_known_values",
+      "target": "memory_map_optimizer_cosine",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L123",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_build_index_threads_max_seq_length_and_batch_size",
+      "target": "memory_map_optimizer_build_index",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L144",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_rerank_threads_max_length_and_batch_size_and_reorders",
+      "target": "memory_map_optimizer_memorydoc",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L167",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_rerank_threads_max_length_and_batch_size_and_reorders",
+      "target": "memory_map_optimizer_rerank",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L172",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_hybrid_search_ranks_relevant_doc_first",
+      "target": "memory_map_optimizer_memorydoc",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L182",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_hybrid_search_ranks_relevant_doc_first",
+      "target": "memory_map_optimizer_hybrid_search",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L193",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_find_duplicate_groups_merges_transitively",
+      "target": "memory_map_optimizer_memorydoc",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L210",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_find_duplicate_groups_merges_transitively",
+      "target": "memory_map_optimizer_find_duplicate_groups",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L215",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_find_duplicate_groups_exact_hash_match_always_grouped",
+      "target": "memory_map_optimizer_memorydoc",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L225",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_find_duplicate_groups_exact_hash_match_always_grouped",
+      "target": "memory_map_optimizer_find_duplicate_groups",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L228",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_group_pairwise_similarities_flags_transitive_chain",
+      "target": "memory_map_optimizer_memorydoc",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L239",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_group_pairwise_similarities_flags_transitive_chain",
+      "target": "memory_map_optimizer_group_pairwise_similarities",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L244",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_parse_sweep_arg",
+      "target": "memory_map_optimizer_parse_sweep_arg",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L255",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_memory_map_optimizer_test_report_runs_without_index_or_clusters",
+      "target": "memory_map_optimizer_cmd_report",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test_memory_map_optimizer.py",
+      "source_location": "L282",
+      "weight": 1.0,
+      "_origin": "ast"
+    }
+  ],
+  "directed": false
+}
