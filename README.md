@@ -1,5 +1,9 @@
 # memory-map-optimizer
 
+<!-- how-to-use-with-ai -->
+> **New here?** See [How to use this repo with AI (Claude, Gemini, ChatGPT)](HOW_TO_USE_WITH_AI.md) — clone it, paste it into an AI tool, and ask in plain English.
+
+
 `memory_map_v1.html` is the original "Memory Map — Tiers, Clusters &
 Resource Routing" audit (2026-08-12) — the baseline snapshot, taken by hand.
 Everything else in this repo exists to produce a v2 of it (`report`'s
