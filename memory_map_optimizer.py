@@ -59,6 +59,7 @@ from __future__ import annotations
 import argparse
 import glob
 import hashlib
+import html as html_lib
 import json
 import string
 import sys
@@ -623,7 +624,7 @@ def cmd_report(args: argparse.Namespace) -> int:
         num_clusters = cdata.get("num_clusters", 0)
         modularity = cdata.get("modularity", 0)
         rows = sorted(cdata.get("cluster_sizes", {}).items(), key=lambda kv: -kv[1])[:20]
-        cluster_rows = "\n".join(f"<tr><td>{cid}</td><td>{size}</td></tr>" for cid, size in rows) or cluster_rows
+        cluster_rows = "\n".join(f"<tr><td>{html_lib.escape(str(cid))}</td><td>{size}</td></tr>" for cid, size in rows) or cluster_rows
 
     dupe_groups: list[list[str]] = []
     if args.dedup and Path(args.dedup).expanduser().exists():
@@ -631,7 +632,7 @@ def cmd_report(args: argparse.Namespace) -> int:
         dupe_groups = ddata.get("groups", [])
     dupe_html = "\n".join(
         '<div class="group"><b>group of {}</b><br>{}</div>'.format(
-            len(g), "<br>".join(f"<code>{p}</code>" for p in g))
+            len(g), "<br>".join(f"<code>{html_lib.escape(p)}</code>" for p in g))
         for g in dupe_groups
     ) or "<p>none found (or `dedup` not run yet)</p>"
 
