@@ -495,6 +495,8 @@ def _parse_sweep_arg(spec: str) -> list[float]:
         raise ValueError(f'--sweep must be START:STOP:STEP, e.g. "0.80:0.95:0.05" (got {spec!r})') from e
     if step <= 0:
         raise ValueError(f"--sweep STEP must be positive (got {step})")
+    if lo > hi:
+        raise ValueError(f"--sweep START must not exceed STOP (got {spec!r})")
     thresholds = []
     t = lo
     while t <= hi + 1e-9:
