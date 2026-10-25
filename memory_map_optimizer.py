@@ -60,6 +60,7 @@ import argparse
 import glob
 import hashlib
 import json
+import string
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -333,7 +334,9 @@ def cosine(a: list[float], b: list[float]) -> float:
 
 
 def _tokenize(text: str) -> list[str]:
-    return [w for w in text.lower().split() if w.isalnum() or len(w) > 2]
+    # strip surrounding punctuation so "routing." / "(qmd)" match "routing" / "qmd"
+    words = (w.strip(string.punctuation) for w in text.lower().split())
+    return [w for w in words if w and (w.isalnum() or len(w) > 2)]
 
 
 # ══════════════════════════════════════════════════════════════════════════
