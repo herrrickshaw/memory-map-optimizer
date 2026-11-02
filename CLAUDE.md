@@ -2,6 +2,12 @@
 
 Guidance for Claude Code sessions working in this repository.
 
+## Commands
+
+- Run: `python memory_map_optimizer.py {cluster|embed|search|dedup|report} --help` (needs `pip install -r requirements.txt`).
+- Test/lint: `pytest -q` and `ruff check .` (tests live in `tests/`; they never load model weights).
+- Keep CLI flags, subcommand names and default output paths stable; model calls stay behind `_embed_texts` / `_predict_rerank_scores`.
+
 <!-- source-fetch-toolkit:v1 (managed by ~/bin/add_source_fetch_section.py — edit there, not here) -->
 ## Source fetching for data collection & literature surveys
 

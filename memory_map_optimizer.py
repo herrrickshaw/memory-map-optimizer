@@ -60,15 +60,37 @@ import argparse
 import glob
 import hashlib
 import json
+import logging
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Iterable, Optional
+from typing import Callable, Optional
+
+logger = logging.getLogger(__name__)
 
 DEFAULT_EMBED_MODEL = "Qwen/Qwen3-Embedding-0.6B"
 DEFAULT_RERANK_MODEL = "Qwen/Qwen3-Reranker-0.6B"
 DEFAULT_INDEX_PATH = ".memopt/index.json"
 DEFAULT_CLUSTERS_PATH = ".memopt/clusters.json"
+DEFAULT_DEDUP_PATH = ".memopt/dedup.json"
+DEFAULT_REPORT_PATH = "memory_map_v2.html"
+DEFAULT_GRAPH_PATH = "~/.graphify/global-graph.json"
+DEFAULT_MEMORY_DIR = "~/.claude/projects/*/memory/**"
+DEFAULT_DEDUP_THRESHOLD = 0.85
+RRF_K = 60  # reciprocal-rank-fusion damping constant (Cormack et al. 2009)
+SNIPPET_CHARS = 140
+MAX_REPORT_CLUSTERS = 20
+
+
+def _expand(path: str) -> Path:
+    """Expand a leading ``~`` in a CLI path argument."""
+    return Path(path).expanduser()
+
+
+def _write_json(path: Path, payload: object, indent: Optional[int] = 2) -> None:
+    """Write *payload* as JSON to *path*, creating parent directories."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=indent))
 
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -183,8 +205,20 @@ def run_leiden(nodes: list[str], edges: list[tuple[str, str]],
     )
 
 
+def write_back_communities(graph_path: Path, node_to_cluster: dict[str, int],
+                           nodes_key: str, id_key: str) -> None:
+    """Add a ``community`` field to each dict node of the graph JSON at *graph_path*, in place."""
+    data = json.loads(graph_path.read_text())
+    by_id = {str(n[id_key]) if isinstance(n, dict) else str(n): n for n in data.get(nodes_key, [])}
+    for node_id, cluster in node_to_cluster.items():
+        n = by_id.get(node_id)
+        if isinstance(n, dict):
+            n["community"] = cluster
+    _write_json(graph_path, data)
+
+
 def cmd_cluster(args: argparse.Namespace) -> int:
-    graph_path = Path(args.graph).expanduser()
+    graph_path = _expand(args.graph)
     if not graph_path.exists():
         print(f"error: graph file not found: {graph_path}", file=sys.stderr)
         return 1
@@ -207,19 +241,12 @@ def cmd_cluster(args: argparse.Namespace) -> int:
     for cid, size in top:
         print(f"  cluster {cid}: {size} nodes")
 
-    out_path = Path(args.out).expanduser()
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(json.dumps(result.to_json(), indent=2))
+    out_path = _expand(args.out)
+    _write_json(out_path, result.to_json())
     print(f"\nwrote {out_path}")
 
     if args.write_back:
-        data = json.loads(graph_path.read_text())
-        by_id = {str(n[args.id_key]) if isinstance(n, dict) else str(n): n for n in data.get(args.nodes_key, [])}
-        for node_id, cluster in result.node_to_cluster.items():
-            n = by_id.get(node_id)
-            if isinstance(n, dict):
-                n["community"] = cluster
-        graph_path.write_text(json.dumps(data, indent=2))
+        write_back_communities(graph_path, result.node_to_cluster, args.nodes_key, args.id_key)
         print(f"wrote community assignments back into {graph_path}")
 
     return 0
@@ -238,6 +265,7 @@ class MemoryDoc:
 
 
 def _read_memory_files(memory_dir_glob: str) -> list[tuple[str, str]]:
+    """Return ``(path, text)`` for every ``.md`` file matching a glob or directory."""
     paths = sorted(set(glob.glob(str(Path(memory_dir_glob).expanduser()), recursive=True)))
     md_paths = [p for p in paths if p.endswith(".md")]
     if not md_paths and Path(memory_dir_glob).expanduser().is_dir():
@@ -246,8 +274,8 @@ def _read_memory_files(memory_dir_glob: str) -> list[tuple[str, str]]:
     for p in md_paths:
         try:
             docs.append((p, Path(p).read_text(errors="ignore")))
-        except OSError:
-            continue
+        except OSError as e:
+            logger.warning("skipping unreadable memory file %s: %s", p, e)
     return docs
 
 
@@ -281,7 +309,8 @@ def _embed_texts(texts: list[str], model_name: str,
 def build_index(docs: list[tuple[str, str]], model_name: str,
                  max_seq_length: int = DEFAULT_MAX_SEQ_LENGTH,
                  batch_size: int = DEFAULT_EMBED_BATCH_SIZE,
-                 embed_fn=_embed_texts) -> list[MemoryDoc]:
+                 embed_fn: Callable[..., list[list[float]]] = _embed_texts) -> list[MemoryDoc]:
+    """Embed ``(path, text)`` pairs with *embed_fn* into :class:`MemoryDoc` records."""
     if not docs:
         return []
     texts = [t for _, t in docs]
@@ -302,13 +331,12 @@ def cmd_embed(args: argparse.Namespace) -> int:
           f"(max_seq_length={args.max_seq_length}, batch_size={args.batch_size}) ...")
     indexed = build_index(docs, args.model, max_seq_length=args.max_seq_length, batch_size=args.batch_size)
 
-    out_path = Path(args.index).expanduser()
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(json.dumps({
+    out_path = _expand(args.index)
+    _write_json(out_path, {
         "model": args.model,
         "docs": [{"path": d.path, "text": d.text, "text_hash": d.text_hash, "embedding": d.embedding}
                  for d in indexed],
-    }))
+    }, indent=None)
     print(f"wrote {out_path} ({len(indexed)} docs)")
     return 0
 
@@ -318,12 +346,14 @@ def cmd_embed(args: argparse.Namespace) -> int:
 # ══════════════════════════════════════════════════════════════════════════
 
 def load_index(path: Path) -> tuple[str, list[MemoryDoc]]:
+    """Load an ``embed`` index file; returns ``(model_name, docs)``."""
     data = json.loads(path.read_text())
     docs = [MemoryDoc(**d) for d in data["docs"]]
     return data.get("model", DEFAULT_EMBED_MODEL), docs
 
 
 def cosine(a: list[float], b: list[float]) -> float:
+    """Cosine similarity of two equal-length vectors; 0.0 if either is all zeros."""
     dot = sum(x * y for x, y in zip(a, b))
     na = sum(x * x for x in a) ** 0.5
     nb = sum(y * y for y in b) ** 0.5
@@ -360,7 +390,6 @@ def hybrid_search(query: str, docs: list[MemoryDoc], query_embedding: list[float
     cos_scores = [cosine(query_embedding, d.embedding) for d in docs]
     cos_rank = {i: r for r, i in enumerate(sorted(range(len(docs)), key=lambda i: -cos_scores[i]))}
 
-    RRF_K = 60
     fused = [
         (docs[i], 1.0 / (RRF_K + bm25_rank[i]) + 1.0 / (RRF_K + cos_rank[i]))
         for i in range(len(docs))
@@ -390,30 +419,51 @@ def _predict_rerank_scores(pairs: list[list[str]], model_name: str,
 def rerank(query: str, candidates: list[tuple[MemoryDoc, float]], model_name: str,
            max_length: int = DEFAULT_MAX_SEQ_LENGTH,
            batch_size: int = DEFAULT_EMBED_BATCH_SIZE,
-           predict_fn=_predict_rerank_scores) -> list[tuple[MemoryDoc, float]]:
+           predict_fn: Callable[..., list[float]] = _predict_rerank_scores,
+           ) -> list[tuple[MemoryDoc, float]]:
+    """Reorder *candidates* by cross-encoder score for *query* (descending)."""
     pairs = [[query, d.text] for d, _ in candidates]
     scores = predict_fn(pairs, model_name, max_length=max_length, batch_size=batch_size)
     reranked = sorted(zip([d for d, _ in candidates], scores), key=lambda x: -x[1])
     return reranked
 
 
+def search_index(query: str, model_name: str, docs: list[MemoryDoc], k: int = 8,
+                 rerank_model: Optional[str] = None,
+                 max_seq_length: int = DEFAULT_MAX_SEQ_LENGTH,
+                 batch_size: int = DEFAULT_EMBED_BATCH_SIZE,
+                 embed_fn: Callable[..., list[list[float]]] = _embed_texts,
+                 predict_fn: Callable[..., list[float]] = _predict_rerank_scores,
+                 ) -> list[tuple[MemoryDoc, float]]:
+    """Hybrid-search *docs* for *query*; reranks with *rerank_model* when given."""
+    query_vec = embed_fn([query], model_name)[0]
+    results = hybrid_search(query, docs, query_vec, k=k)
+    if rerank_model:
+        results = rerank(query, results, rerank_model, max_length=max_seq_length,
+                         batch_size=batch_size, predict_fn=predict_fn)
+    return results
+
+
+def format_result(doc: MemoryDoc, score: float) -> str:
+    """Two-line CLI rendering of one search hit."""
+    snippet = doc.text.strip().replace("\n", " ")[:SNIPPET_CHARS]
+    return f"{score:>7.4f}  {doc.path}\n         {snippet}"
+
+
 def cmd_search(args: argparse.Namespace) -> int:
-    index_path = Path(args.index).expanduser()
+    index_path = _expand(args.index)
     if not index_path.exists():
         print(f"error: no index at {index_path} -- run `embed` first", file=sys.stderr)
         return 1
     model_name, docs = load_index(index_path)
 
-    query_vec = _embed_texts([args.query], model_name)[0]
-    results = hybrid_search(args.query, docs, query_vec, k=args.k)
-
-    if args.rerank:
-        results = rerank(args.query, results, args.rerank_model,
-                          max_length=args.max_seq_length, batch_size=args.batch_size)
-
+    results = search_index(
+        args.query, model_name, docs, k=args.k,
+        rerank_model=args.rerank_model if args.rerank else None,
+        max_seq_length=args.max_seq_length, batch_size=args.batch_size,
+    )
     for doc, score in results:
-        snippet = doc.text.strip().replace("\n", " ")[:140]
-        print(f"{score:>7.4f}  {doc.path}\n         {snippet}")
+        print(format_result(doc, score))
     return 0
 
 
@@ -421,7 +471,7 @@ def cmd_search(args: argparse.Namespace) -> int:
 # dedup -- near-duplicate / mergeable memory file detection
 # ══════════════════════════════════════════════════════════════════════════
 
-def find_duplicate_groups(docs: list[MemoryDoc], threshold: float = 0.85) -> list[list[str]]:
+def find_duplicate_groups(docs: list[MemoryDoc], threshold: float = DEFAULT_DEDUP_THRESHOLD) -> list[list[str]]:
     """
     Groups files whose embeddings are mutually similar above *threshold*
     into merge candidates -- connected components over the similarity graph,
@@ -463,7 +513,7 @@ def find_duplicate_groups(docs: list[MemoryDoc], threshold: float = 0.85) -> lis
     return sorted([g for g in groups.values() if len(g) > 1], key=lambda g: -len(g))
 
 
-def group_pairwise_similarities(docs_by_path: dict[str, "MemoryDoc"],
+def group_pairwise_similarities(docs_by_path: dict[str, MemoryDoc],
                                  group_paths: list[str]) -> list[tuple[str, str, float]]:
     """
     All pairwise cosine similarities among the docs in one merge-candidate
@@ -500,8 +550,34 @@ def _parse_sweep_arg(spec: str) -> list[float]:
     return thresholds
 
 
+def _print_sweep(docs: list[MemoryDoc], thresholds: list[float]) -> dict[float, list[list[str]]]:
+    """Print group counts per threshold plus pairwise detail at the loosest one; return the groups."""
+    print(f"sweeping {len(thresholds)} threshold(s) [{thresholds[0]:.3f}..{thresholds[-1]:.3f}]:\n")
+    by_path = {d.path: d for d in docs}
+    sweep_results: dict[float, list[list[str]]] = {}
+    for t in thresholds:
+        groups = find_duplicate_groups(docs, threshold=t)
+        sweep_results[t] = groups
+        sizes = f", sizes={[len(g) for g in groups]}" if groups else ""
+        print(f"  {t:.3f}: {len(groups)} group(s){sizes}")
+
+    loosest_groups = sweep_results[thresholds[0]]
+    if loosest_groups:
+        print(f"\nPairwise similarity within each group at the loosest threshold tested "
+              f"({thresholds[0]:.3f}) -- a pair below {thresholds[-1]:.3f} (the strictest "
+              f"threshold tested) means that pair alone wouldn't clear your strict end; "
+              f"the group only holds together via a chain through a third doc:\n")
+        for g in loosest_groups:
+            print(f"  group of {len(g)}:")
+            for a, b, sim in group_pairwise_similarities(by_path, g):
+                flag = "" if sim >= thresholds[-1] else "  <-- below strictest threshold tested"
+                print(f"    {sim:.4f}  {a}\n             {b}{flag}")
+            print()
+    return sweep_results
+
+
 def cmd_dedup(args: argparse.Namespace) -> int:
-    index_path = Path(args.index).expanduser()
+    index_path = _expand(args.index)
     if not index_path.exists():
         print(f"error: no index at {index_path} -- run `embed` first", file=sys.stderr)
         return 1
@@ -513,35 +589,11 @@ def cmd_dedup(args: argparse.Namespace) -> int:
         except ValueError as e:
             print(f"error: {e}", file=sys.stderr)
             return 1
-
-        print(f"sweeping {len(thresholds)} threshold(s) [{thresholds[0]:.3f}..{thresholds[-1]:.3f}]:\n")
-        by_path = {d.path: d for d in docs}
-        sweep_results = {}
-        for t in thresholds:
-            groups = find_duplicate_groups(docs, threshold=t)
-            sweep_results[t] = groups
-            sizes = f", sizes={[len(g) for g in groups]}" if groups else ""
-            print(f"  {t:.3f}: {len(groups)} group(s){sizes}")
-
-        loosest_groups = sweep_results[thresholds[0]]
-        if loosest_groups:
-            print(f"\nPairwise similarity within each group at the loosest threshold tested "
-                  f"({thresholds[0]:.3f}) -- a pair below {thresholds[-1]:.3f} (the strictest "
-                  f"threshold tested) means that pair alone wouldn't clear your strict end; "
-                  f"the group only holds together via a chain through a third doc:\n")
-            for g in loosest_groups:
-                print(f"  group of {len(g)}:")
-                for a, b, sim in group_pairwise_similarities(by_path, g):
-                    flag = "" if sim >= thresholds[-1] else "  <-- below strictest threshold tested"
-                    print(f"    {sim:.4f}  {a}\n             {b}{flag}")
-                print()
-
+        sweep_results = _print_sweep(docs, thresholds)
         if args.out:
-            out_path = Path(args.out).expanduser()
-            out_path.parent.mkdir(parents=True, exist_ok=True)
-            out_path.write_text(json.dumps(
-                {"thresholds": thresholds,
-                 "groups_by_threshold": {f"{t:.4f}": g for t, g in sweep_results.items()}}, indent=2))
+            _write_json(_expand(args.out), {
+                "thresholds": thresholds,
+                "groups_by_threshold": {f"{t:.4f}": g for t, g in sweep_results.items()}})
             print(f"wrote {args.out}")
         return 0
 
@@ -558,9 +610,7 @@ def cmd_dedup(args: argparse.Namespace) -> int:
         print()
 
     if args.out:
-        out_path = Path(args.out).expanduser()
-        out_path.parent.mkdir(parents=True, exist_ok=True)
-        out_path.write_text(json.dumps({"threshold": args.threshold, "groups": groups}, indent=2))
+        _write_json(_expand(args.out), {"threshold": args.threshold, "groups": groups})
         print(f"wrote {args.out}")
     return 0
 
@@ -603,40 +653,54 @@ _REPORT_TEMPLATE = """<!doctype html>
 """
 
 
-def cmd_report(args: argparse.Namespace) -> int:
-    import datetime as dt
+def _read_json_if_exists(path: Optional[str]) -> Optional[dict]:
+    """Parse the JSON file at *path* if given and present, else None."""
+    if path and _expand(path).exists():
+        return json.loads(_expand(path).read_text())
+    return None
 
-    num_docs = 0
-    if args.index and Path(args.index).expanduser().exists():
-        _, docs = load_index(Path(args.index).expanduser())
-        num_docs = len(docs)
 
-    num_clusters = modularity = 0
+def render_report(num_docs: int, num_clusters: int, modularity: float,
+                  cluster_sizes: dict[str, int], dupe_groups: list[list[str]],
+                  generated: str) -> str:
+    """Render the memory-map HTML from already-loaded cluster/dedup data (pure)."""
     cluster_rows = "<tr><td colspan=2>run `cluster` first</td></tr>"
-    if args.clusters and Path(args.clusters).expanduser().exists():
-        cdata = json.loads(Path(args.clusters).expanduser().read_text())
-        num_clusters = cdata.get("num_clusters", 0)
-        modularity = cdata.get("modularity", 0)
-        rows = sorted(cdata.get("cluster_sizes", {}).items(), key=lambda kv: -kv[1])[:20]
-        cluster_rows = "\n".join(f"<tr><td>{cid}</td><td>{size}</td></tr>" for cid, size in rows) or cluster_rows
-
-    dupe_groups: list[list[str]] = []
-    if args.dedup and Path(args.dedup).expanduser().exists():
-        ddata = json.loads(Path(args.dedup).expanduser().read_text())
-        dupe_groups = ddata.get("groups", [])
+    rows = sorted(cluster_sizes.items(), key=lambda kv: -kv[1])[:MAX_REPORT_CLUSTERS]
+    if rows:
+        cluster_rows = "\n".join(f"<tr><td>{cid}</td><td>{size}</td></tr>" for cid, size in rows)
     dupe_html = "\n".join(
         '<div class="group"><b>group of {}</b><br>{}</div>'.format(
             len(g), "<br>".join(f"<code>{p}</code>" for p in g))
         for g in dupe_groups
     ) or "<p>none found (or `dedup` not run yet)</p>"
-
-    html = _REPORT_TEMPLATE.format(
-        generated=dt.date.today().isoformat(),
+    return _REPORT_TEMPLATE.format(
+        generated=generated,
         num_docs=num_docs, num_clusters=num_clusters, modularity=modularity,
         num_dupe_groups=len(dupe_groups),
         cluster_rows=cluster_rows, dupe_html=dupe_html,
     )
-    out_path = Path(args.out).expanduser()
+
+
+def cmd_report(args: argparse.Namespace) -> int:
+    import datetime as dt
+
+    num_docs = 0
+    if args.index and _expand(args.index).exists():
+        _, docs = load_index(_expand(args.index))
+        num_docs = len(docs)
+
+    cdata = _read_json_if_exists(args.clusters) or {}
+    ddata = _read_json_if_exists(args.dedup) or {}
+
+    html = render_report(
+        num_docs=num_docs,
+        num_clusters=cdata.get("num_clusters", 0),
+        modularity=cdata.get("modularity", 0),
+        cluster_sizes=cdata.get("cluster_sizes", {}),
+        dupe_groups=ddata.get("groups", []),
+        generated=dt.date.today().isoformat(),
+    )
+    out_path = _expand(args.out)
     out_path.write_text(html)
     print(f"wrote {out_path}")
     return 0
@@ -646,12 +710,12 @@ def cmd_report(args: argparse.Namespace) -> int:
 # CLI
 # ══════════════════════════════════════════════════════════════════════════
 
-def main() -> int:
+def main(argv: Optional[list[str]] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     p = sub.add_parser("cluster", help="Leiden community detection on graphify's graph JSON")
-    p.add_argument("--graph", default="~/.graphify/global-graph.json")
+    p.add_argument("--graph", default=DEFAULT_GRAPH_PATH)
     p.add_argument("--nodes-key", default="nodes")
     p.add_argument("--edges-key", default="edges")
     p.add_argument("--source-key", default="source")
@@ -664,7 +728,7 @@ def main() -> int:
     p.set_defaults(func=cmd_cluster)
 
     p = sub.add_parser("embed", help="index memory markdown files with a modern embedding model")
-    p.add_argument("--memory-dir", default="~/.claude/projects/*/memory/**")
+    p.add_argument("--memory-dir", default=DEFAULT_MEMORY_DIR)
     p.add_argument("--model", default=DEFAULT_EMBED_MODEL,
                     help=f"HF model id, e.g. {DEFAULT_EMBED_MODEL} or BAAI/bge-m3")
     p.add_argument("--max-seq-length", type=int, default=DEFAULT_MAX_SEQ_LENGTH,
@@ -688,7 +752,7 @@ def main() -> int:
 
     p = sub.add_parser("dedup", help="find near-duplicate / mergeable memory files")
     p.add_argument("--index", default=DEFAULT_INDEX_PATH)
-    p.add_argument("--threshold", type=float, default=0.85,
+    p.add_argument("--threshold", type=float, default=DEFAULT_DEDUP_THRESHOLD,
                     help="min cosine similarity to group as duplicates (default %(default)s; "
                          "lower finds more/looser matches, higher finds fewer/stricter ones)")
     p.add_argument("--sweep", metavar="START:STOP:STEP",
@@ -696,17 +760,17 @@ def main() -> int:
                          "each candidate group's pairwise similarities, so you can see which "
                          "matches are solid (all pairs high) vs. a fragile transitive chain "
                          "(e.g. --sweep 0.80:0.95:0.05)")
-    p.add_argument("--out", default=".memopt/dedup.json")
+    p.add_argument("--out", default=DEFAULT_DEDUP_PATH)
     p.set_defaults(func=cmd_dedup)
 
     p = sub.add_parser("report", help="regenerate an HTML memory map from live cluster+dedup data")
     p.add_argument("--index", default=DEFAULT_INDEX_PATH)
     p.add_argument("--clusters", default=DEFAULT_CLUSTERS_PATH)
-    p.add_argument("--dedup", default=".memopt/dedup.json")
-    p.add_argument("--out", default="memory_map_v2.html")
+    p.add_argument("--dedup", default=DEFAULT_DEDUP_PATH)
+    p.add_argument("--out", default=DEFAULT_REPORT_PATH)
     p.set_defaults(func=cmd_report)
 
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
     return args.func(args)
 
 
