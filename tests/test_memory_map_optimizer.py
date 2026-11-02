@@ -16,7 +16,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import memory_map_optimizer as mmo
 
 
@@ -257,13 +257,13 @@ def test_parse_sweep_arg():
 
     try:
         mmo._parse_sweep_arg("not-a-spec")
-        assert False, "expected ValueError"
+        raise AssertionError("expected ValueError")
     except ValueError:
         pass
 
     try:
         mmo._parse_sweep_arg("0.8:0.9:0")
-        assert False, "expected ValueError for non-positive step"
+        raise AssertionError("expected ValueError for non-positive step")
     except ValueError:
         pass
     print("test_parse_sweep_arg OK")
