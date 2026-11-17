@@ -287,6 +287,158 @@ def test_report_runs_without_index_or_clusters():
     print("test_report_runs_without_index_or_clusters OK")
 
 
+# ── added 2026-10-25 (sdlc test-hardening) ────────────────────────────────
+
+def test_tokenize_strips_trailing_punctuation_so_words_match():
+    """Memory markdown is prose: "routing." / "(qmd)" / "optimizer," must
+    tokenize to the same term a query uses, or BM25 never matches them."""
+    toks = mmo._tokenize("Use qmd for routing. See (graphify), optimizer: done")
+    for word in ("routing", "graphify", "optimizer", "qmd"):
+        assert word in toks, f"{word!r} missing from {toks}"
+
+
+def test_tokenize_lowercases_and_keeps_short_alnum_words():
+    assert mmo._tokenize("A Token OPTIMIZER") == ["a", "token", "optimizer"]
+
+
+def test_tokenize_drops_pure_punctuation():
+    assert mmo._tokenize("-- ... ## |") == []
+
+
+def test_parse_sweep_arg_single_point_range():
+    assert mmo._parse_sweep_arg("0.9:0.9:0.05") == [0.9]
+
+
+def test_parse_sweep_arg_reversed_range_is_rejected():
+    """START > STOP produced an empty list, and cmd_dedup then crashed on
+    thresholds[0] with an IndexError instead of a usage error."""
+    try:
+        mmo._parse_sweep_arg("0.95:0.80:0.05")
+    except ValueError:
+        return
+    assert False, "expected ValueError for START > STOP"
+
+
+def test_cmd_dedup_reversed_sweep_returns_error_code():
+    import argparse
+    with tempfile.TemporaryDirectory() as d:
+        idx = Path(d) / "index.json"
+        idx.write_text(json.dumps({"model": "m", "docs": [
+            {"path": "a.md", "text": "x", "text_hash": "h1", "embedding": [1.0, 0.0]},
+            {"path": "b.md", "text": "y", "text_hash": "h2", "embedding": [0.0, 1.0]},
+        ]}))
+        args = argparse.Namespace(index=str(idx), sweep="0.95:0.80:0.05", threshold=0.85, out=None)
+        assert mmo.cmd_dedup(args) == 1
+
+
+def test_cmd_dedup_writes_groups_json():
+    import argparse
+    with tempfile.TemporaryDirectory() as d:
+        idx = Path(d) / "index.json"
+        out = Path(d) / "dedup.json"
+        idx.write_text(json.dumps({"model": "m", "docs": [
+            {"path": "a.md", "text": "x", "text_hash": "h1", "embedding": [1.0, 0.0]},
+            {"path": "b.md", "text": "y", "text_hash": "h2", "embedding": [0.99, 0.01]},
+            {"path": "c.md", "text": "z", "text_hash": "h3", "embedding": [0.0, 1.0]},
+        ]}))
+        args = argparse.Namespace(index=str(idx), sweep=None, threshold=0.9, out=str(out))
+        assert mmo.cmd_dedup(args) == 0
+        data = json.loads(out.read_text())
+        assert data["threshold"] == 0.9
+        assert [sorted(g) for g in data["groups"]] == [["a.md", "b.md"]]
+
+
+def test_find_duplicate_groups_threshold_is_inclusive_and_singletons_dropped():
+    # cosine([1,0],[0.6,0.8]) == 0.6 exactly
+    docs = [mmo.MemoryDoc("a.md", "x", "h1", [1.0, 0.0]),
+            mmo.MemoryDoc("b.md", "y", "h2", [0.6, 0.8]),
+            mmo.MemoryDoc("c.md", "z", "h3", [0.0, -1.0])]
+    assert [sorted(g) for g in mmo.find_duplicate_groups(docs, threshold=0.6)] == [["a.md", "b.md"]]
+    assert mmo.find_duplicate_groups(docs, threshold=0.61) == []
+    assert mmo.find_duplicate_groups([], threshold=0.5) == []
+
+
+def test_cosine_zero_vector_and_opposite():
+    assert mmo.cosine([0.0, 0.0], [1.0, 2.0]) == 0.0
+    assert math.isclose(mmo.cosine([1.0, 2.0], [-1.0, -2.0]), -1.0)
+
+
+def test_load_index_roundtrip_and_default_model():
+    with tempfile.TemporaryDirectory() as d:
+        p = Path(d) / "i.json"
+        p.write_text(json.dumps({"docs": [{"path": "a.md", "text": "t", "text_hash": "h", "embedding": [1.0]}]}))
+        model, docs = mmo.load_index(p)
+        assert model == mmo.DEFAULT_EMBED_MODEL
+        assert docs[0].path == "a.md" and docs[0].embedding == [1.0]
+
+
+def test_read_memory_files_only_markdown_from_directory():
+    with tempfile.TemporaryDirectory() as d:
+        (Path(d) / "sub").mkdir()
+        (Path(d) / "a.md").write_text("alpha")
+        (Path(d) / "sub" / "b.md").write_text("beta")
+        (Path(d) / "c.txt").write_text("ignored")
+        docs = mmo._read_memory_files(d)
+        assert sorted(Path(p).name for p, _ in docs) == ["a.md", "b.md"]
+        assert dict((Path(p).name, t) for p, t in docs)["b.md"] == "beta"
+
+
+def test_build_index_hashes_text_and_handles_empty():
+    assert mmo.build_index([], "m", embed_fn=lambda *a, **k: 1 / 0) == []
+    out = mmo.build_index([("a.md", "abc")], "m", embed_fn=lambda texts, m, **k: [[0.5]] * len(texts))
+    import hashlib
+    assert out[0].text_hash == hashlib.sha256(b"abc").hexdigest()[:16]
+    assert out[0].embedding == [0.5]
+
+
+def test_report_escapes_file_paths_in_html():
+    """Dedup group paths are file names on disk; they must be HTML-escaped,
+    not injected raw into the report page."""
+    import argparse
+    with tempfile.TemporaryDirectory() as d:
+        dd = Path(d) / "dedup.json"
+        bad = "<img src=x onerror=alert(1)>.md"
+        dd.write_text(json.dumps({"groups": [[bad, "b&c.md"]]}))
+        out = Path(d) / "r.html"
+        args = argparse.Namespace(index=None, clusters=None, dedup=str(dd), out=str(out))
+        assert mmo.cmd_report(args) == 0
+        html = out.read_text()
+        assert bad not in html
+        assert "&lt;img src=x onerror=alert(1)&gt;.md" in html
+        assert "b&amp;c.md" in html
+
+
+def test_report_renders_cluster_counts():
+    import argparse
+    with tempfile.TemporaryDirectory() as d:
+        c = Path(d) / "c.json"
+        c.write_text(json.dumps({"num_clusters": 2, "modularity": 0.4123,
+                                 "cluster_sizes": {"0": 3, "1": 5}}))
+        out = Path(d) / "r.html"
+        args = argparse.Namespace(index=None, clusters=str(c), dedup=None, out=str(out))
+        assert mmo.cmd_report(args) == 0
+        html = out.read_text()
+        assert "<b>2</b><span>real communities" in html
+        assert html.index("<td>1</td><td>5</td>") < html.index("<td>0</td><td>3</td>")
+
+
+def test_cmd_cluster_write_back_sets_community_on_nodes():
+    pytest = __import__("pytest")
+    pytest.importorskip("leidenalg")
+    import argparse
+    with tempfile.TemporaryDirectory() as d:
+        g = Path(d) / "g.json"
+        g.write_text(json.dumps({"nodes": [{"id": "a"}, {"id": "b"}, {"id": "c"}],
+                                 "edges": [{"source": "a", "target": "b"}]}))
+        args = argparse.Namespace(graph=str(g), nodes_key="nodes", edges_key="edges",
+                                  source_key="source", target_key="target", id_key="id",
+                                  resolution=1.0, seed=0, write_back=True, out=str(Path(d) / "c.json"))
+        assert mmo.cmd_cluster(args) == 0
+        nodes = json.loads(g.read_text())["nodes"]
+        comm = {n["id"]: n["community"] for n in nodes}
+        assert comm["a"] == comm["b"] != comm["c"]
+
+
 if __name__ == "__main__":
     test_load_graph_json_dict_shape()
     test_load_graph_json_dangling_edge_endpoint()

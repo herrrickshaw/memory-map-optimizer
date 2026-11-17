@@ -59,7 +59,9 @@ from __future__ import annotations
 import argparse
 import glob
 import hashlib
+import html as html_lib
 import json
+import string
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -333,7 +335,9 @@ def cosine(a: list[float], b: list[float]) -> float:
 
 
 def _tokenize(text: str) -> list[str]:
-    return [w for w in text.lower().split() if w.isalnum() or len(w) > 2]
+    # strip surrounding punctuation so "routing." / "(qmd)" match "routing" / "qmd"
+    words = (w.strip(string.punctuation) for w in text.lower().split())
+    return [w for w in words if w and (w.isalnum() or len(w) > 2)]
 
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -492,6 +496,8 @@ def _parse_sweep_arg(spec: str) -> list[float]:
         raise ValueError(f'--sweep must be START:STOP:STEP, e.g. "0.80:0.95:0.05" (got {spec!r})') from e
     if step <= 0:
         raise ValueError(f"--sweep STEP must be positive (got {step})")
+    if lo > hi:
+        raise ValueError(f"--sweep START must not exceed STOP (got {spec!r})")
     thresholds = []
     t = lo
     while t <= hi + 1e-9:
@@ -618,7 +624,7 @@ def cmd_report(args: argparse.Namespace) -> int:
         num_clusters = cdata.get("num_clusters", 0)
         modularity = cdata.get("modularity", 0)
         rows = sorted(cdata.get("cluster_sizes", {}).items(), key=lambda kv: -kv[1])[:20]
-        cluster_rows = "\n".join(f"<tr><td>{cid}</td><td>{size}</td></tr>" for cid, size in rows) or cluster_rows
+        cluster_rows = "\n".join(f"<tr><td>{html_lib.escape(str(cid))}</td><td>{size}</td></tr>" for cid, size in rows) or cluster_rows
 
     dupe_groups: list[list[str]] = []
     if args.dedup and Path(args.dedup).expanduser().exists():
@@ -626,7 +632,7 @@ def cmd_report(args: argparse.Namespace) -> int:
         dupe_groups = ddata.get("groups", [])
     dupe_html = "\n".join(
         '<div class="group"><b>group of {}</b><br>{}</div>'.format(
-            len(g), "<br>".join(f"<code>{p}</code>" for p in g))
+            len(g), "<br>".join(f"<code>{html_lib.escape(p)}</code>" for p in g))
         for g in dupe_groups
     ) or "<p>none found (or `dedup` not run yet)</p>"
 
