@@ -6,4 +6,4 @@ leidenalg>=0.10
 sentence-transformers>=3.0
 
 # BM25 half of hybrid search
-rank-bm25>=0.2
+rank-bm25>=0.2.2
