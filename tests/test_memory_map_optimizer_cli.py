@@ -633,3 +633,14 @@ def test_main_embed_search_dedup_report_defaults(monkeypatch):
 
 def test_main_returns_the_command_exit_code(monkeypatch, tmp_path, capsys):
     assert run_main(monkeypatch, "dedup", "--index", str(tmp_path / "missing.json")) == 1
+
+
+def test_parse_sweep_arg_keeps_four_decimals():
+    assert mmo._parse_sweep_arg("0.80:0.82:0.0125") == [0.8, 0.8125]
+
+
+def test_cmd_dedup_sweep_pair_exactly_at_the_strictest_threshold_is_not_flagged(tmp_path, capsys):
+    idx = make_index(tmp_path, [doc("a", "t1", [1, 0]), doc("b", "t2", [1, 0])])
+    mmo.cmd_dedup(dedup_args(idx, sweep="0.9:1.0:0.1"))
+    text = capsys.readouterr().out
+    assert "1.0000  a\n             b\n" in text and "<-- below" not in text
