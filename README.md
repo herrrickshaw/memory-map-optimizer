@@ -34,6 +34,32 @@ It does **not** replace graphify or qmd, or talk to graphify's MCP port /
 qmd's cron job — it reads and writes the same files those tools already
 use, so it's a drop-in augmentation.
 
+## In plain English
+
+*This section is for readers who do not write software.*
+
+**What problem does it solve?** AI coding assistants can keep "memory notes": small text files about past
+decisions. Over months these multiply, repeat each other and become hard to find. This tool helps tidy them.
+
+| Command | In everyday words |
+|---|---|
+| `cluster` | Sort a web of linked items into natural groups |
+| `embed` | Teach the computer the rough meaning of each note |
+| `search` | Find notes by exact words **and** by meaning |
+| `dedup` | Point out notes that say nearly the same thing |
+| `report` | Produce a one-page picture of the results |
+
+**How much should you trust it?**
+- Grouping and ranking are tested with small made-up examples where the right answer is known.
+- The original build never successfully ran the step that downloads a real language model. The automated
+  tests do not download one either. Try it on a few notes first.
+- Treat duplicate warnings as suggestions. Read both notes before deleting either.
+
+**Where does your information go?** The language model is downloaded once from Hugging Face, a public model
+library. After that, your notes are processed on your own computer.
+
+**What you need:** Python, a few gigabytes of free disk space for the model, and comfort with a command line.
+
 ## Install
 
 macOS's Homebrew Python refuses global `pip install` (PEP 668,
